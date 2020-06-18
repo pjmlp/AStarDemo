@@ -1,0 +1,206 @@
+/* AStarSolver.cpp - A* solver algorithm implementation
+* Copyright (C) 2014 Paulo Pinto
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the
+* Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+* Boston, MA 02111-1307, USA.
+*/
+
+#include <unordered_set>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <functional>
+
+#include "Map.h"
+#include "Node.h"
+#include "Logger.h"
+#include "AStarSolver.h"
+
+// make the standard C++ library available on the local namespace
+using namespace std;
+
+// Helper functions for the ClosedType
+size_t hash_func(AStarSolver::NodePtr n)
+{
+    return n->col() + n->row();
+}
+
+bool equal_func(AStarSolver::NodePtr lhs, AStarSolver::NodePtr rhs)
+{
+    return (lhs->col() == rhs->col()) && (lhs->row() == rhs->row());
+}
+
+bool heap_comparator (AStarSolver::NodePtr lhs, AStarSolver::NodePtr rhs)
+{
+	return lhs->total_cost() > rhs->total_cost();
+}
+
+// Helper type definitons
+typedef vector<AStarSolver::NodePtr> SucessorsType;
+typedef vector<AStarSolver::NodePtr> OpenType;
+typedef unordered_set<AStarSolver::NodePtr, function<decltype(hash_func)>, function<decltype(equal_func)>> ClosedType;
+
+
+/**
+* Debuging function. I did not declare it as
+* private members, so that I don't need to expose the implementation.
+*/
+template<typename T>
+void write_data(ostream& output, const string& name, const T& data)
+{
+    LogInfo("Start "s + name);
+    for (shared_ptr<Node> next_node : data) {
+        if (next_node != nullptr) {
+            next_node->write_contents(output);
+        }
+    }
+    LogInfo("\nEnd "s + name);
+}
+
+
+
+AStarSolver::AStarSolver(Map& map): m_map(map)
+{
+}
+
+/**
+ * A* search function
+ * The caller is responsible for cleaning the memory allocated for the
+ * path. The arguments are assumed to be allocated on the heap.
+ *
+ * @param start where to start searching from
+ * @param goal   the target destination
+ * @return null if nothing was found, the reversed path otherwise.
+ */
+AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
+{
+    SucessorsType neighbours;
+    OpenType open_list;
+    ClosedType closed_list(50, hash_func, equal_func);
+
+    open_list.push_back (start);
+    make_heap( open_list.begin(), open_list.end(), heap_comparator);
+
+    while (open_list.size() > 0) {
+        // Get the top element from the Open list
+        auto current = open_list.front();
+        pop_heap(open_list.begin(), open_list.end(), heap_comparator);
+        open_list.pop_back();
+        closed_list.insert(current);
+
+        m_map.visit(current->row(), current->col());
+
+        //For debugging purposes
+        //current->write_contents();
+        //write_data("OPEN", open_list);
+        //write_data("CLOSED", closed_list);
+
+        // have we found our destination?
+        if (*current == *goal) {
+            return current;
+        }
+        else {
+            // no, then keep on searching
+            sucessors(current, *goal, neighbours);
+
+
+            while (neighbours.size() > 0) {
+                auto next_node = neighbours.back();
+                neighbours.pop_back();
+
+                auto search_closed = closed_list.find(next_node);
+                if (search_closed != closed_list.end()) {
+                    continue;
+                }
+
+
+                double cost = current->cost() + movement_cost(*current, *next_node);
+
+                auto openFound = std::find_if(std::begin(open_list), std::end(open_list), [current](const NodePtr succ) {
+                    return *current == *succ;
+                });
+                if (openFound != std::end(open_list)) {
+                    auto n = (*openFound);
+                    if (cost < n->cost()) {
+                        n->set_cost(cost);
+                        make_heap(std::begin(open_list), std::end(open_list), heap_comparator); // need to rebalance the queue
+                    }
+                }
+                else {
+                    next_node->set_cost(cost);
+                    open_list.push_back(next_node);
+                    push_heap(std::begin(open_list), std::end(open_list), heap_comparator);
+                }
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+
+/**
+ * Searches all the sucessor nodes from the current state.
+ * @param current the node to generate the sucessors
+ * @param goal the end position that we want to reach
+ * @param neighbours the list of valid sucessor nodes. It is the caller's responsability
+ * to delete them.
+ */
+void AStarSolver::sucessors(NodePtr current, const Node& goal, vector<NodePtr>& neighbours)
+{
+		int col_min = max (current->col() - 1, 0);
+        int col_max = min(current->col() + 2, m_map.columns() - 1);
+   
+        int row_min = max(current->row() - 1, 0);
+        int row_max = min(current->row() + 2, m_map.rows() - 1);
+   
+		for (int row = row_min; row < row_max; ++row) {
+			for (int col = col_min; col < col_max; ++col) {
+				// avoid using the current node or crossing walls
+                if (!(row == current->row() && col == current->col()) &&
+                    (m_map.at(row, col) != Map::CellType::BLOCKED)) {
+					auto neighbour = make_shared<Node> (row, col);
+
+					neighbour->set_parent(current);
+					neighbour->set_estimation(estimate(*current, goal));
+					neighbours.push_back(neighbour);
+			    }
+		    }
+		}
+}
+
+/**
+ * Cost function for reaching the current state
+ */
+double AStarSolver::movement_cost(const Node& from, const Node& to) const
+{
+	// make the diagonals cost a bit more than horizontal/vertical deplacements
+    double dx = abs(from.col() - to.col());
+    double dy = abs(from.row() - to.row());
+    return (dx + dy) < 2.0 ? 1.0 : 1.5;
+}
+
+
+/**
+ * Heuristic function
+ */
+double AStarSolver::estimate(const Node& current, const Node& goal) const
+{
+	// estimate using Manhattan distance with diagonals
+    double dx = abs(current.col() - goal.col());
+    double dy = abs(current.row() - goal.row());
+	return sqrt(dx * dx + dy * dy);
+}
