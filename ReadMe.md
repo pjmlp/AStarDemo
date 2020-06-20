@@ -13,6 +13,8 @@ C++/CX into C++/WinRT.
 With the goal being to learn about how to write proper C++/WinRT, the application remains as bare bones as in the
 previous learning experience, and got thiner as I removed the Android related code.
 
+There are thousands of fancy demo samples with tile engines and A*, this is not one of them.
+
 # Code Structure
 
 The code is written in C++/WinRT, targeting Visual 2019 or later, composed of the following projects:
@@ -22,8 +24,6 @@ AStarDemo - The Windows UWP applications using C++/WinRT;
 AStarDemoLib - The A* search algorithm implemented in portable modern C++ code;
 
 AStarDemoLibTests - The unit tests for the A* library written with help of Google Tests testing framework.
-
-There is an old branch with the Windows 8.1 legacy architecture.
 
 # Building
 
