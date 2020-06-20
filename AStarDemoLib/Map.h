@@ -40,7 +40,7 @@ class Map
 public:
     enum class CellType {FREE, BLOCKED, VISITED, NODE_PATH, START, END};
 
-    Map();
+    Map() noexcept;
     Map(const std::string& filename);
 	Map(int rows, int cols);
 
@@ -48,11 +48,11 @@ public:
     bool load(const std::string& filename);
 	bool load(std::wistream& fd);
 
-	void clear();
+	void clear() noexcept;
 
-	int columns() const { return mapCols;  }
+	int columns() const noexcept { return mapCols;  }
 
-	int rows() const { return mapRows; }
+	int rows() const noexcept { return mapRows; }
 
 	// Declared as inline member function so that we get the abstraction
 	// without speed penalty.
@@ -82,8 +82,8 @@ public:
     void dump_map();
     void add_path(std::shared_ptr<Node> path);
 
-    const std::pair<int, int>& get_start() { return start; }
-    const std::pair<int, int>& get_end() { return end; }
+    const std::pair<int, int>& get_start() const noexcept { return start; }
+    const std::pair<int, int>& get_end() const noexcept { return end; }
 
 private:
 	template <typename S, typename T>

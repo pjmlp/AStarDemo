@@ -36,7 +36,7 @@
 using namespace std;
 
 // Helper functions for the ClosedType
-size_t hash_func(AStarSolver::NodePtr n)
+size_t hash_func(AStarSolver::NodePtr n) noexcept
 {
     return n->col() + n->row();
 }
@@ -75,7 +75,7 @@ void write_data(ostream& output, const string& name, const T& data)
 
 
 
-AStarSolver::AStarSolver(Map& map): m_map(map)
+AStarSolver::AStarSolver(Map& map) noexcept : m_map(map)
 {
 }
 
@@ -131,7 +131,7 @@ AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
                 }
 
 
-                double cost = current->cost() + movement_cost(*current, *next_node);
+                const double cost = current->cost() + movement_cost(*current, *next_node);
 
                 auto openFound = std::find_if(std::begin(open_list), std::end(open_list), [current](const NodePtr succ) {
                     return *current == *succ;
@@ -165,11 +165,11 @@ AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
  */
 void AStarSolver::sucessors(NodePtr current, const Node& goal, vector<NodePtr>& neighbours)
 {
-		int col_min = max (current->col() - 1, 0);
-        int col_max = min(current->col() + 2, m_map.columns() - 1);
+		const int col_min = max (current->col() - 1, 0);
+        const int col_max = min(current->col() + 2, m_map.columns() - 1);
    
-        int row_min = max(current->row() - 1, 0);
-        int row_max = min(current->row() + 2, m_map.rows() - 1);
+        const int row_min = max(current->row() - 1, 0);
+        const int row_max = min(current->row() + 2, m_map.rows() - 1);
    
 		for (int row = row_min; row < row_max; ++row) {
 			for (int col = col_min; col < col_max; ++col) {
@@ -189,11 +189,11 @@ void AStarSolver::sucessors(NodePtr current, const Node& goal, vector<NodePtr>& 
 /**
  * Cost function for reaching the current state
  */
-double AStarSolver::movement_cost(const Node& from, const Node& to) const
+double AStarSolver::movement_cost(const Node& from, const Node& to) const noexcept
 {
 	// make the diagonals cost a bit more than horizontal/vertical deplacements
-    double dx = abs(from.col() - to.col());
-    double dy = abs(from.row() - to.row());
+    const double dx = abs(from.col() - to.col());
+    const double dy = abs(from.row() - to.row());
     return (dx + dy) < 2.0 ? 1.0 : 1.5;
 }
 
@@ -201,10 +201,10 @@ double AStarSolver::movement_cost(const Node& from, const Node& to) const
 /**
  * Heuristic function
  */
-double AStarSolver::estimate(const Node& current, const Node& goal) const
+double AStarSolver::estimate(const Node& current, const Node& goal) const noexcept
 {
 	// estimate using Manhattan distance with diagonals
-    double dx = abs(current.col() - goal.col());
-    double dy = abs(current.row() - goal.row());
+    const double dx = abs(current.col() - goal.col());
+    const double dy = abs(current.row() - goal.row());
 	return sqrt(dx * dx + dy * dy);
 }

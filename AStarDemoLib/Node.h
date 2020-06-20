@@ -32,19 +32,19 @@ class Node final
 public:
     Node(int row, int col);
 
-    void set_parent(std::shared_ptr<Node> parent) { m_parent = parent; }
-    std::shared_ptr<Node> get_parent() { return m_parent; }
+    void set_parent(std::shared_ptr<Node> parent) noexcept { m_parent = parent; }
+    std::shared_ptr<Node> get_parent() noexcept { return m_parent; }
 
 	// accessor functions
-	int row() const { return m_row; }
-	int col() const { return m_col; }
-	double cost() const { return m_cost; }
-	double estimation() const { return m_estimation; }
-	double total_cost() const { return m_cost + m_estimation; }
+	int row() const noexcept { return m_row; }
+	int col() const noexcept { return m_col; }
+	double cost() const noexcept { return m_cost; }
+	double estimation() const noexcept { return m_estimation; }
+	double total_cost() const noexcept { return m_cost + m_estimation; }
 
 	// setters
-	void set_cost(double cost) { m_cost = cost; }
-	void set_estimation(double estimation) { m_estimation = estimation; }
+	void set_cost(double cost) noexcept { m_cost = cost; }
+	void set_estimation(double estimation) noexcept { m_estimation = estimation; }
 
 	bool operator== (const Node& other) const;
 	bool operator!= (const Node& other) const;

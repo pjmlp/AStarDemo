@@ -35,7 +35,7 @@ using namespace std;
 /**
 * Constructs the map by setting its contents to empty.
 */
-Map::Map() : start{ -1, -1 }, end{ -1, -1 }, mapRows{ 0 }, mapCols{ 0 }
+Map::Map() noexcept : start{ -1, -1 }, end{ -1, -1 }, mapRows{ 0 }, mapCols{ 0 }
 {
 	clear();
 }
@@ -123,7 +123,7 @@ bool Map::load(std::wistream& fd)
 /**
 * Clears the map contents
 */
-void Map::clear()
+void Map::clear() noexcept
 {
 	for (int row = 0; row < mapRows; ++row) {
 		for (int col = 0; col < mapCols; ++col) {
@@ -187,9 +187,10 @@ void Map::add_path(std::shared_ptr<Node> path)
 	auto current = path;
 
     bool first = true;
-	while (current) {
+	while (current != nullptr) {
         if (first) {
             m_map[current->row()][current->col()] = CellType::END;
+			first = false;
         } else if (current->get_parent() == nullptr) {
             m_map[current->row()][current->col()] = CellType::START;
         } else {

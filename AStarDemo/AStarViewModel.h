@@ -65,7 +65,7 @@ namespace winrt::AStarDemo::implementation
         int dx, dy;
         bool running;
 
-        void draw_map(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const;
+        void drawMap(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter) const;
 
         void startSearch();
         void stopSearch();

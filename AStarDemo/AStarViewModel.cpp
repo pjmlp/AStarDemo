@@ -108,7 +108,7 @@ namespace winrt::AStarDemo::implementation
                 // render the background
                 renderTarget.Clear(Colors::White());
 
-                draw_map(renderTarget, size);
+                drawMap(renderTarget);
             }
         }
     }
@@ -116,7 +116,7 @@ namespace winrt::AStarDemo::implementation
     /**
      *  @brief stops the current search if any and clears the loaded map.
      */
-    void  AStarViewModel::ClearMap_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
+    void  AStarViewModel::ClearMap_Click(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::RoutedEventArgs const&)
     {
         stopSearch();
         map.clear();
@@ -125,7 +125,7 @@ namespace winrt::AStarDemo::implementation
     /**
      *  @brief Triggers a new search, if none is currently running.
      */
-    void  AStarViewModel::Search_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
+    void  AStarViewModel::Search_Click(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::RoutedEventArgs const&)
     {
         ChangeFieldValue(goButtonEnabled, false, L"GoButtonEnabled");
 
@@ -135,7 +135,7 @@ namespace winrt::AStarDemo::implementation
     /**
      *  @brief Stops the current search, if one is taking place.
      */
-    void  AStarViewModel::Stop_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
+    void  AStarViewModel::Stop_Click(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::RoutedEventArgs const&)
     {
         if (running) {
             stopSearch();
@@ -146,7 +146,7 @@ namespace winrt::AStarDemo::implementation
     /**
      *  @brief Handles double click action.
      */
-    void AStarViewModel::MapImage_DoubleTapped(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args)
+    void AStarViewModel::MapImage_DoubleTapped(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args)
     {
         auto point = args.GetPosition(nullptr);
         auto col = (point.X - marginx) / dx;
@@ -245,7 +245,7 @@ namespace winrt::AStarDemo::implementation
      *  MapRender::draw_map Draws the real map.
      * @param painter
      */
-    void AStarViewModel::draw_map(CanvasDrawingSession const& painter, Size size) const
+    void AStarViewModel::drawMap(CanvasDrawingSession const& painter) const
     {
 
         // now draw the real map contents
