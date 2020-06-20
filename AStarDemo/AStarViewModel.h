@@ -24,7 +24,15 @@
 
 #include "AStarViewModel.g.h"
 
-#include "MapWidget.h"
+#include <future>
+#include <string>
+#include <iosfwd>
+
+#include "Map.h"
+#include "AStarSolver.h"
+
+// forward declarations
+class Render;
 
 namespace winrt::AStarDemo::implementation
 {
@@ -48,10 +56,40 @@ namespace winrt::AStarDemo::implementation
         void NotifyPropertyChanged(winrt::hstring const& field);
 
     private:
-        MapWidget widget;
         bool goButtonEnabled;
 
         winrt::event<Windows::UI::Xaml::Data::PropertyChangedEventHandler> propertyChanged;
+
+        Map map;
+        AStarSolver solver;
+        bool show_gridlines;
+        int marginx, marginy;
+        int dx, dy;
+        bool running;
+
+        void draw_grid(Render& painter) const;
+        void draw_map(Render& painter) const;
+        void draw_nodes(Render& painter) const;
+
+        void startSearch();
+        void stopSearch();
+        void startSearch(int x0, int y0, int x1, int y1);
+        bool loadMap(const std::string& pathname);
+        bool loadMap(std::wistream& fd);
+
+        void clearMap();
+
+        bool is_running() const;
+
+        void paint(Render& painter);
+        void mouseDoubleClickEvent(float x, float y);
+
+        void enable_gridlines();
+        void disable_gridlines();
+
+
+        // Handle for the A* background processing.
+        std::future<AStarSolver::NodePtr> backTask;
     };
 }
 
