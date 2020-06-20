@@ -30,15 +30,11 @@
 #include <thread>
 
 
-#include "Render.h"
 #include "Map.h"
 #include "Node.h"
 #include "AStarSolver.h"
 
 #include "Logger.h"
-
-#include <winrt/Windows.Storage.h>
-#include <winrt/Windows.UI.Xaml.Input.h>
 
 #include "AStarViewModel.h"
 #if __has_include("AStarViewModel.g.cpp")
@@ -46,15 +42,30 @@
 #endif
 
 
-
+// to simplify some typing
 using namespace winrt::Windows::Foundation;
 using namespace winrt::Windows::Storage;
+using namespace winrt::Microsoft::Graphics::Canvas;
+using namespace winrt::Windows::UI;
 
 namespace winrt::AStarDemo::implementation
 {
-    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), show_gridlines(false), running(false)
+    /**
+     * Helper member template for setting fields with INotifyPropertyChanged support.
+     * Naturally a clever solution with operator=() is possible, but this is just a basic application.
+     * @param field the field to change the current value
+     * @param value the new value to assign to the field
+     * @param fieldname the fieldname to use in the notification.
+     */
+    template<typename T>
+    void AStarViewModel::ChangeFieldValue(T& field, T value, winrt::hstring const& fieldname)
     {
+        field = value;
+        NotifyPropertyChanged(fieldname);
+    }
 
+    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), running(false)
+    {
     }
 
     bool AStarViewModel::GoButtonEnabled()
@@ -67,7 +78,10 @@ namespace winrt::AStarDemo::implementation
         goButtonEnabled = value;
     }
 
-    IAsyncAction AStarViewModel::LoadFile(::winrt::Windows::Storage::StorageFile const& file)
+    /**
+     * @brief Loads the requested filename from the filesystem.
+     */
+    IAsyncAction AStarViewModel::LoadFile(StorageFile const& file)
     {
         winrt::hstring data = co_await FileIO::ReadTextAsync(file);
         std::wstring str(data.data());
@@ -75,12 +89,14 @@ namespace winrt::AStarDemo::implementation
 
         if (loadMap(buffer))
         {
-            goButtonEnabled = true;
-            NotifyPropertyChanged(L"GoButtonEnabled");
+            ChangeFieldValue(goButtonEnabled, true, L"GoButtonEnabled");
         }
     }
 
-    void AStarViewModel::Draw(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& renderTarget, ::winrt::Windows::Foundation::Size const& size)
+    /**
+     * @brief Draws the current state into the drawing surface, with the provided size.
+     */
+    void AStarViewModel::Draw(CanvasDrawingSession const& renderTarget, Size const& size)
     {
         if (renderTarget != nullptr) {
             if (map.columns() > 0 && map.rows() > 0) {
@@ -90,19 +106,15 @@ namespace winrt::AStarDemo::implementation
                 marginy = (static_cast<int>(size.Height) % map.rows()) / 2;
 
                 // render the background
-                renderTarget.Clear(::winrt::Windows::UI::Colors::White());
+                renderTarget.Clear(Colors::White());
 
                 draw_map(renderTarget, size);
-
-                if (show_gridlines) {
-                    draw_grid(renderTarget, size);
-                }
             }
         }
     }
 
     /**
-     *  stops the current search if any and clears the loaded map.
+     *  @brief stops the current search if any and clears the loaded map.
      */
     void  AStarViewModel::ClearMap_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
     {
@@ -110,23 +122,30 @@ namespace winrt::AStarDemo::implementation
         map.clear();
     }
 
+    /**
+     *  @brief Triggers a new search, if none is currently running.
+     */
     void  AStarViewModel::Search_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
     {
-        goButtonEnabled = false;
-        NotifyPropertyChanged(L"GoButtonEnabled");
+        ChangeFieldValue(goButtonEnabled, false, L"GoButtonEnabled");
 
         startSearch();
     }
 
+    /**
+     *  @brief Stops the current search, if one is taking place.
+     */
     void  AStarViewModel::Stop_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
     {
         if (running) {
             stopSearch();
-            goButtonEnabled = true;
-            NotifyPropertyChanged(L"GoButtonEnabled");
+            ChangeFieldValue(goButtonEnabled, true, L"GoButtonEnabled");
         }
     }
 
+    /**
+     *  @brief Handles double click action.
+     */
     void AStarViewModel::MapImage_DoubleTapped(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args)
     {
         auto point = args.GetPosition(nullptr);
@@ -144,50 +163,49 @@ namespace winrt::AStarDemo::implementation
         }
     }
 
-    void AStarViewModel::NotifyPropertyChanged(winrt::hstring const& field)
+    /**
+     * @brief Support member function for the INotifyPropertyChanged UWP interface.
+     * @param fieldname The name of field to notify to the bindings
+     */
+    void AStarViewModel::NotifyPropertyChanged(winrt::hstring const& fieldname)
     {
-        propertyChanged(*this, Windows::UI::Xaml::Data::PropertyChangedEventArgs{ field });
+        propertyChanged(*this, Windows::UI::Xaml::Data::PropertyChangedEventArgs{ fieldname });
     }
 
-    winrt::event_token AStarViewModel::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& handler)
+    /**
+     * @brief Support member function for the INotifyPropertyChanged UWP interface. Stores the notification token.
+     * @param token The notification token for the UI binding.
+     * @returns The current notification token for the UI binding, after updating it.
+     */
+    winrt::event_token AStarViewModel::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& token)
     {
-        return propertyChanged.add(handler);
+        return propertyChanged.add(token);
     }
 
+    /**
+     * @brief Support member function for the INotifyPropertyChanged UWP interface. Stores the notification token.
+     * @param token The notification token for the UI binding.
+     */
     void AStarViewModel::PropertyChanged(winrt::event_token const& token)
     {
         propertyChanged.remove(token);
     }
 
     /**
- *  AStarViewModel::startSearch
- *
- * Starts the background processing for the A* search with
- * the currently loaded map.
- */
+    *  @brief Starts the background processing for the A* search with the currently loaded map.
+    */
     void AStarViewModel::startSearch()
     {
         auto startPos = map.get_start();
         auto endPos = map.get_end();
 
-        startSearch(startPos.first, startPos.second, endPos.first, endPos.second);
-    }
-
-    /**
-     *  AStarViewModel::startSearch
-     *
-     * Starts the background processing for the A* search with
-     * the currently loaded map.
-     */
-    void AStarViewModel::startSearch(int x0, int y0, int x1, int y1)
-    {
         running = true;
 
-        backTask = std::async(std::launch::async, [this, x0, y0, x1, y1]() {
+        backTask = std::async(std::launch::async, [this, startPos, endPos]() {
             // Initialize the required data
 
-            auto start = std::make_shared<Node>(x0, y0);
-            auto end = std::make_shared<Node>(x1, y1);
+            auto start = std::make_shared<Node>(startPos.first, startPos.second);
+            auto end = std::make_shared<Node>(endPos.first, endPos.second);
 
             // now find the result
             auto res = solver.find(start, end);
@@ -195,12 +213,10 @@ namespace winrt::AStarDemo::implementation
             this->stopSearch();
             return res;
         });
-
-
     }
 
     /**
-     *  Stops the current search, if any.
+     *   @brief Stops the current search, if any.
      */
     void AStarViewModel::stopSearch()
     {
@@ -225,38 +241,11 @@ namespace winrt::AStarDemo::implementation
         return map.load(fd);
     }
 
-    void AStarViewModel::enable_gridlines()
-    {
-        show_gridlines = true;
-    }
-
-    void AStarViewModel::disable_gridlines()
-    {
-        show_gridlines = false;
-    }
-
-    /**
-     *  MapRender::draw_grid Draws the map grid around the map cells.
-     * @param painter
-     */
-    void AStarViewModel::draw_grid(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const
-    {
-        // now do the vertical lines
-        for (float x = 0.0f; x < size.Width; x += dx) {
-            painter.DrawLine(x, 0.0f, x, size.Height, ::winrt::Windows::UI::Colors::Black());
-        }
-
-        // now do the horizontal lines
-        for (float y = 0.0f; y < size.Height; y += dy) {
-            painter.DrawLine(0.0f, y, size.Width, y, ::winrt::Windows::UI::Colors::Black());
-        }
-    }
-
     /**
      *  MapRender::draw_map Draws the real map.
      * @param painter
      */
-    void AStarViewModel::draw_map(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const
+    void AStarViewModel::draw_map(CanvasDrawingSession const& painter, Size size) const
     {
 
         // now draw the real map contents
@@ -289,8 +278,8 @@ namespace winrt::AStarDemo::implementation
                     break;
                 }
 
-                ::winrt::Windows::Foundation::Rect rect(marginx + (col * dx), marginy + (row * dy), dx, dy);
-                ::winrt::Windows::UI::Color color = ::winrt::Windows::UI::ColorHelper::FromArgb(255, r, g, b);
+                Rect rect(marginx + (col * dx), marginy + (row * dy), dx, dy);
+                Color color = ColorHelper::FromArgb(255, r, g, b);
                 painter.FillRectangle(rect, color);
             }
         }

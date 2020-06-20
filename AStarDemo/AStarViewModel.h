@@ -50,31 +50,26 @@ namespace winrt::AStarDemo::implementation
         winrt::event_token PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& value);
         void PropertyChanged(winrt::event_token const& token);
 
-        void NotifyPropertyChanged(winrt::hstring const& field);
+        void NotifyPropertyChanged(winrt::hstring const& fieldname);
 
     private:
         bool goButtonEnabled;
 
+        template<typename T>
+        void ChangeFieldValue(T& field, T value, winrt::hstring const& fieldname);
         winrt::event<Windows::UI::Xaml::Data::PropertyChangedEventHandler> propertyChanged;
 
         Map map;
         AStarSolver solver;
-        bool show_gridlines;
         int marginx, marginy;
         int dx, dy;
         bool running;
 
-        void draw_grid(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const;
         void draw_map(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const;
 
         void startSearch();
         void stopSearch();
-        void startSearch(int x0, int y0, int x1, int y1);
         bool loadMap(std::wistream& fd);
-
-        void enable_gridlines();
-        void disable_gridlines();
-
 
         // Handle for the A* background processing.
         std::future<AStarSolver::NodePtr> backTask;
