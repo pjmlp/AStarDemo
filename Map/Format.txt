@@ -1,0 +1,10 @@
+The maps are built as follows:
+
+First line contains the file format version, e.g. AStarv10
+
+The second line contains the amount of rows cols in the map
+
+The remaing n rows contain m cols of ascii characthers representing map cells, with the following meaning:
+
+=> . free position
+=> * wall (by convention, it can actually be anything but .)
