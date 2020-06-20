@@ -31,9 +31,6 @@
 #include "Map.h"
 #include "AStarSolver.h"
 
-// forward declarations
-class Render;
-
 namespace winrt::AStarDemo::implementation
 {
     struct AStarViewModel : AStarViewModelT<AStarViewModel>
@@ -67,22 +64,13 @@ namespace winrt::AStarDemo::implementation
         int dx, dy;
         bool running;
 
-        void draw_grid(Render& painter) const;
-        void draw_map(Render& painter) const;
-        void draw_nodes(Render& painter) const;
+        void draw_grid(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const;
+        void draw_map(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter, ::winrt::Windows::Foundation::Size size) const;
 
         void startSearch();
         void stopSearch();
         void startSearch(int x0, int y0, int x1, int y1);
-        bool loadMap(const std::string& pathname);
         bool loadMap(std::wistream& fd);
-
-        void clearMap();
-
-        bool is_running() const;
-
-        void paint(Render& painter);
-        void mouseDoubleClickEvent(float x, float y);
 
         void enable_gridlines();
         void disable_gridlines();

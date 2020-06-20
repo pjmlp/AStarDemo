@@ -16,6 +16,5 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="Render.h" />
   </ItemGroup>
 </Project>
