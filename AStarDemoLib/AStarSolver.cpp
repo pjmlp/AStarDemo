@@ -29,6 +29,9 @@
 #include "Logger.h"
 #include "AStarSolver.h"
 
+// Uncomment if debugging information for the solver is desired
+//#define DEBUG_ASTAR_SOLVER
+
 // make the standard C++ library available on the local namespace
 using namespace std;
 
@@ -103,10 +106,11 @@ AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
 
         m_map.visit(current->row(), current->col());
 
-        //For debugging purposes
-        //current->write_contents();
-        //write_data("OPEN", open_list);
-        //write_data("CLOSED", closed_list);
+#ifdef DEBUG_ASTAR_SOLVER
+        current->write_contents();
+        write_data("OPEN", open_list);
+        write_data("CLOSED", closed_list);
+#endif // DEBUG_ASTAR_SOLVER
 
         // have we found our destination?
         if (*current == *goal) {

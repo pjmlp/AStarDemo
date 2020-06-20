@@ -37,7 +37,7 @@ class Map;
 class AStarSolver
 {
 public:
-    typedef std::shared_ptr<Node> NodePtr;
+    using NodePtr = std::shared_ptr<Node> ;
 	AStarSolver(Map& map);
 
     NodePtr find(NodePtr start, NodePtr goal);
