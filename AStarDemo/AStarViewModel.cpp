@@ -100,9 +100,9 @@ namespace winrt::AStarDemo::implementation
     {
         if (renderTarget != nullptr) {
             if (map.columns() > 0 && map.rows() > 0) {
-                dx = size.Width / map.columns();
+                dx = static_cast<int>(size.Width / map.columns());
                 marginx = (static_cast<int>(size.Width) % map.columns()) / 2;
-                dy = size.Height / map.rows();
+                dy = static_cast<int>(size.Height / map.rows());
                 marginy = (static_cast<int>(size.Height) % map.rows()) / 2;
 
                 // render the background
@@ -149,8 +149,8 @@ namespace winrt::AStarDemo::implementation
     void AStarViewModel::MapImage_DoubleTapped(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args)
     {
         auto point = args.GetPosition(nullptr);
-        auto col = (point.X - marginx) / dx;
-        auto row = (point.Y - marginy) / dy;
+        auto col = static_cast<int>((point.X - marginx) / dx);
+        auto row = static_cast<int>((point.Y - marginy) / dy);
 
         auto startPos = map.get_start();
         auto endPos = map.get_end();

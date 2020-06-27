@@ -30,7 +30,7 @@
 class Node final
 {
 public:
-    Node(int row, int col);
+    explicit Node(int row, int col) noexcept;
 
     void set_parent(std::shared_ptr<Node> parent) noexcept { m_parent = parent; }
     std::shared_ptr<Node> get_parent() noexcept { return m_parent; }
@@ -46,8 +46,8 @@ public:
 	void set_cost(double cost) noexcept { m_cost = cost; }
 	void set_estimation(double estimation) noexcept { m_estimation = estimation; }
 
-	bool operator== (const Node& other) const;
-	bool operator!= (const Node& other) const;
+	bool operator== (const Node& other) const noexcept;
+	bool operator!= (const Node& other) const noexcept;
 
 	void write_contents(std::ostream& output) const;
 

@@ -26,7 +26,7 @@
 using namespace std;
 
 
-Node::Node(int row, int col): m_row(row), m_col(col), m_cost(0.0), m_estimation(0.0), m_parent(nullptr)
+Node::Node(int row, int col) noexcept: m_row(row), m_col(col), m_cost(0.0), m_estimation(0.0), m_parent(nullptr)
 {
 
 }
@@ -34,7 +34,7 @@ Node::Node(int row, int col): m_row(row), m_col(col), m_cost(0.0), m_estimation(
  * Assume that two nodes for the same cell are the same node.
  * @param other node to compare
  */
-bool Node::operator== (const Node& other) const
+bool Node::operator== (const Node& other) const noexcept
 {
 	if (this != &other) {
 		return (m_col == other.m_col) && (m_row == other.m_row);
@@ -48,7 +48,7 @@ bool Node::operator== (const Node& other) const
  * Assume that two nodes for the same cell are the same node.
  * @param other node to compare
  */
-bool Node::operator!= (const Node& other) const
+bool Node::operator!= (const Node& other) const noexcept
 {
 	return !(*this == other);
 }

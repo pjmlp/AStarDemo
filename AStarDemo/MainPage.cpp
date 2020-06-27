@@ -59,12 +59,12 @@ namespace winrt::AStarDemo::implementation
 
     }
 
-    void MainPage::MapCanvas_CreateResources(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const& sender, ::winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs const& args)
+    void MainPage::MapCanvas_CreateResources(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const&, ::winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs const&)
     {
     }
 
 
-    void MainPage::Page_Unloaded(IInspectable const& sender, RoutedEventArgs const& e)
+    void MainPage::Page_Unloaded(IInspectable const&, RoutedEventArgs const&)
     {
         // ensure that the control is properly cleaned
         MapCanvas().RemoveFromVisualTree();

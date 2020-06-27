@@ -36,17 +36,17 @@
 using namespace std;
 
 // Helper functions for the ClosedType
-size_t hash_func(AStarSolver::NodePtr n) noexcept
+size_t hash_func(const AStarSolver::NodePtr& n) noexcept
 {
-    return n->col() + n->row();
+    return n->col() + static_cast<size_t>(n->row());
 }
 
-bool equal_func(AStarSolver::NodePtr lhs, AStarSolver::NodePtr rhs)
+bool equal_func(const AStarSolver::NodePtr& lhs, const AStarSolver::NodePtr& rhs)
 {
     return (lhs->col() == rhs->col()) && (lhs->row() == rhs->row());
 }
 
-bool heap_comparator (AStarSolver::NodePtr lhs, AStarSolver::NodePtr rhs)
+bool heap_comparator (const AStarSolver::NodePtr& lhs, const AStarSolver::NodePtr& rhs) noexcept
 {
 	return lhs->total_cost() > rhs->total_cost();
 }
@@ -82,7 +82,7 @@ AStarSolver::AStarSolver(Map& map) noexcept : m_map(map)
 /**
  * A* search function
  * The caller is responsible for cleaning the memory allocated for the
- * path. The arguments are assumed to be allocated on the heap.
+ * path. The arguments are assumed to be allocated on the heap. [[gsl::suppress(lifetime.3)]]
  *
  * @param start where to start searching from
  * @param goal   the target destination
@@ -100,6 +100,10 @@ AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
     while (open_list.size() > 0) {
         // Get the top element from the Open list
         auto current = open_list.front();
+        if (current == nullptr) {
+            continue;
+        }
+
         pop_heap(open_list.begin(), open_list.end(), heap_comparator);
         open_list.pop_back();
         closed_list.insert(current);
@@ -133,7 +137,7 @@ AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
 
                 const double cost = current->cost() + movement_cost(*current, *next_node);
 
-                auto openFound = std::find_if(std::begin(open_list), std::end(open_list), [current](const NodePtr succ) {
+                auto openFound = std::find_if(std::begin(open_list), std::end(open_list), [current](const NodePtr succ) noexcept {
                     return *current == *succ;
                 });
                 if (openFound != std::end(open_list)) {
@@ -176,6 +180,10 @@ void AStarSolver::sucessors(NodePtr current, const Node& goal, vector<NodePtr>& 
 				// avoid using the current node or crossing walls
                 if (!(row == current->row() && col == current->col()) &&
                     (m_map.at(row, col) != Map::CellType::BLOCKED)) {
+                    
+                    // Not clear how to make VC++ happy. Apparently make_shared() is to be avoided, although
+                    // push_back expects a shared_ptr.
+                    [[gsl::suppress(lifetime.5)]]
 					auto neighbour = make_shared<Node> (row, col);
 
 					neighbour->set_parent(current);
