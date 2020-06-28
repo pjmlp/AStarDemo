@@ -98,10 +98,10 @@
     <IncludePath>$(SolutionDir)..\AStarDemoLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)..\AStarDemoLib;$(IncludePath)</IncludePath>
+    <IncludePath>D:\vcpkg\installed\x64-windows\include;$(SolutionDir)..\AStarDemoLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)..\AStarDemoLib;$(IncludePath)</IncludePath>
+    <IncludePath>D:\vcpkg\installed\x64-windows\include;$(SolutionDir)..\AStarDemoLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

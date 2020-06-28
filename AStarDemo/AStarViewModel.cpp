@@ -209,7 +209,7 @@ namespace winrt::AStarDemo::implementation
 
             // now find the result
             auto res = solver.find(start, end);
-            map.add_path(res);
+            map.add_path(res.get());
             this->stopSearch();
             return res;
         });
