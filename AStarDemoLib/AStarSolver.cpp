@@ -36,7 +36,7 @@
 using namespace std;
 
 // Helper functions for the ClosedType
-size_t hash_func(const AStarSolver::NodePtr& n) noexcept
+size_t hash_func(const AStarSolver::NodePtr& n)
 {
     return n->col() + static_cast<size_t>(n->row());
 }
@@ -100,9 +100,7 @@ AStarSolver::NodePtr AStarSolver::find(NodePtr start, NodePtr goal)
     while (open_list.size() > 0) {
         // Get the top element from the Open list
         auto current = open_list.front();
-        if (current == nullptr) {
-            continue;
-        }
+        assert(current != nullptr);
 
         pop_heap(open_list.begin(), open_list.end(), heap_comparator);
         open_list.pop_back();

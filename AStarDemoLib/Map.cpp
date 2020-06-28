@@ -35,18 +35,9 @@ using namespace std;
 /**
 * Constructs the map by setting its contents to empty.
 */
-Map::Map() noexcept : start{ -1, -1 }, end{ -1, -1 }, mapRows{ 0 }, mapCols{ 0 }
+Map::Map() noexcept: start{ -1, -1 }, end{ -1, -1 }, mapRows{ 0 }, mapCols{ 0 }
 {
 	clear();
-}
-
-/**
- * Constructs the map by loading it from the specified filename
- * @param filename The filename where to load the data from.
- */
-Map::Map(const std::string& filename)
-{
-    load(filename);
 }
 
 Map::Map(int rows, int cols):start { -1, -1 }, end{ -1, -1 }, mapRows{ rows }, mapCols{ cols }
@@ -61,27 +52,12 @@ Map::Map(int rows, int cols):start { -1, -1 }, end{ -1, -1 }, mapRows{ rows }, m
 * @param filename The filename where to load the data from.
 * @return false if there was an error loading the file
 */
-bool Map::load(const std::string& filename)
+bool Map::load(std::wistream& fd)
 {
-    ifstream fd;
-    fd.open(filename);
+	const wstring version{ L"AStarv10" };
 
-    if (fd.fail()) {
-    	LogInfo("Failed to open the file ");
-		LogErrno();
-
-        return false;
-    }
-
-	return parse_file<string, ifstream>(fd, "AStarv10");
-}
-
-
-template <typename S, typename T>
-bool Map::parse_file(T& fd, const S& version)
-{
-	int row = 0;
-	S str;
+	size_t row = 0;
+	wstring str;
 
 	while (!fd.eof()) {
 		if (row == 0) {
@@ -100,12 +76,12 @@ bool Map::parse_file(T& fd, const S& version)
 		else {
 			fd >> str;
 
-			for (int i = 0; i < mapCols; ++i) {
-				if (str[i] == '.') {
-					m_map[row - 2][i] = CellType::FREE;
+			for (size_t i = 0; i < mapCols; ++i) {
+				if (str.at(i) == '.') {
+					m_map.at(row - 2).at(i) = CellType::FREE;
 				}
 				else {
-					m_map[row - 2][i] = CellType::BLOCKED;
+					m_map.at(row - 2).at(i) = CellType::BLOCKED;
 				}
 			}
 		}
@@ -115,18 +91,14 @@ bool Map::parse_file(T& fd, const S& version)
 	return true;
 }
 
-bool Map::load(std::wistream& fd)
-{
-	return parse_file<wstring, wistream>(fd, L"AStarv10");
-}
-
 /**
 * Clears the map contents
 */
+[[gsl::suppress(bounds.4)]] // The for loop already takes care, no need for double check.
 void Map::clear() noexcept
 {
-	for (int row = 0; row < mapRows; ++row) {
-		for (int col = 0; col < mapCols; ++col) {
+	for (int row = 0; row < m_map.size(); ++row) {
+		for (int col = 0; col < m_map[row].size(); ++col) {
 			m_map[row][col] = CellType::FREE;
 		}
 	}
@@ -142,7 +114,7 @@ void Map::dump_map()
 {
 	for (int row = 0; row < mapRows; ++row) {
         for (int col = 0; col < mapCols; ++col) {
-            switch (m_map[row][col]) {
+            switch (m_map.at(row).at(col)) {
             case CellType::FREE:
                     cout << '.';
                     break;
@@ -181,7 +153,7 @@ void Map::dump_map()
  *
  * @param path the end of the found path
  */
-void Map::add_path(std::shared_ptr<Node> path)
+void Map::add_path(Node * path)
 {
     lock_guard<std::mutex> lock(m_map_mutex);
 	auto current = path;
@@ -189,14 +161,14 @@ void Map::add_path(std::shared_ptr<Node> path)
     bool first = true;
 	while (current != nullptr) {
         if (first) {
-            m_map[current->row()][current->col()] = CellType::END;
+            m_map.at(current->row()).at(current->col()) = CellType::END;
 			first = false;
         } else if (current->get_parent() == nullptr) {
-            m_map[current->row()][current->col()] = CellType::START;
+			m_map.at(current->row()).at(current->col()) = CellType::START;
         } else {
-            m_map[current->row()][current->col()] = CellType::NODE_PATH;
+			m_map.at(current->row()).at(current->col()) = CellType::NODE_PATH;
         }
-		current = current->get_parent();
+		current = current->get_parent().get();
 	}
 }
 
