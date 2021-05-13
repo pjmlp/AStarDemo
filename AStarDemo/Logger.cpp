@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include "Logger.h"
+import Logger;
 
 // Helper function for writing into the debug console from Visual Studio
 static void OutputMessage(const std::string& message)

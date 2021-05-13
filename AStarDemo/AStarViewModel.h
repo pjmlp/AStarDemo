@@ -28,8 +28,8 @@
 #include <string>
 #include <iosfwd>
 
-#include "Map.h"
-#include "AStarSolver.h"
+import AStarLib;
+import Map;
 
 namespace winrt::AStarDemo::implementation
 {

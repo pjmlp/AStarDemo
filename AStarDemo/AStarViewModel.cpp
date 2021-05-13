@@ -17,10 +17,10 @@
 * Boston, MA 02111-1307, USA.
 */
 
+import AStarLib;
+
 #include "pch.h"
 #include <sstream>
-
-#include "Map.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -28,13 +28,6 @@
 #include <string>
 #include <memory>
 #include <thread>
-
-
-#include "Map.h"
-#include "Node.h"
-#include "AStarSolver.h"
-
-#include "Logger.h"
 
 #include "AStarViewModel.h"
 #if __has_include("AStarViewModel.g.cpp")
