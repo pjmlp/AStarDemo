@@ -1,7 +1,11 @@
+module;
+
 #include <memory>
 #include <gtest/gtest.h>
 
-#include "Map.h"
+export module MapTests;
+
+import AStarLib;
 
 using namespace testing;
 
@@ -30,3 +34,5 @@ TEST(MapTests, TestAddPath)
     ASSERT_EQ(map.at(startNode->row(), startNode->col()), Map::CellType::END);
     ASSERT_EQ(map.at(endNode->row(), endNode->col()), Map::CellType::END);
 }
+
+export class MapTests;

@@ -1,5 +1,5 @@
-#include "node_tests.h"
-#include "map_tests.h"
+import NodeTests;
+import MapTests;
 
 #include <gtest/gtest.h>
 

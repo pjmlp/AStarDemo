@@ -1,7 +1,11 @@
+module;
+
 #include <memory>
 #include <gtest/gtest.h>
 
-#include "Node.h"
+export module NodeTests;
+
+import AStarLib;
 
 using namespace testing;
 
@@ -58,21 +62,21 @@ TEST(NodeTests, TestTotalCost)
     node.set_cost(34);
     node.set_estimation(10);
 
-    ASSERT_EQ (node.cost() + node.estimation(), node.total_cost());
+    ASSERT_EQ(node.cost() + node.estimation(), node.total_cost());
 }
 
 TEST(NodeTests, TestParent)
 {
     Node node(15, 20);
 
-    ASSERT_EQ (node.get_parent().get(), nullptr);
+    ASSERT_EQ(node.get_parent().get(), nullptr);
 
     auto parentNode = std::make_shared<Node>(45, 56);
     node.set_parent(parentNode);
 
-    ASSERT_NE (node.get_parent().get(), nullptr);
-    ASSERT_EQ (parentNode, node.get_parent());
+    ASSERT_NE(node.get_parent().get(), nullptr);
+    ASSERT_EQ(parentNode, node.get_parent());
 
 }
 
-
+export class NodeTests;
