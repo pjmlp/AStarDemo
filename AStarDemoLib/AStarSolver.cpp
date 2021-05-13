@@ -1,3 +1,17 @@
+module;
+
+#include <unordered_set>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <functional>
+#include <cassert>
+
+module AStarSolver;
+
+import Logger;
+
 /* AStarSolver.cpp - A* solver algorithm implementation
 * Copyright (C) 2014 Paulo Pinto
 *
@@ -16,18 +30,6 @@
 * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 * Boston, MA 02111-1307, USA.
 */
-
-#include <unordered_set>
-#include <queue>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <functional>
-
-#include "Map.h"
-#include "Node.h"
-#include "Logger.h"
-#include "AStarSolver.h"
 
 // Uncomment if debugging information for the solver is desired
 //#define DEBUG_ASTAR_SOLVER

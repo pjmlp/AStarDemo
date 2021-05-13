@@ -1,3 +1,9 @@
+module;
+
+#include <iostream>
+
+module Node;
+
 /* node.cpp - Node implementation
 * Copyright (C) 2014 Paulo Pinto
 *
@@ -17,9 +23,6 @@
 * Boston, MA 02111-1307, USA.
 */
 
-#include <iostream>
-
-#include "Node.h"
 
 
 // make the standard C++ library available on the local namespace

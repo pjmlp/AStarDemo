@@ -1,3 +1,16 @@
+module;
+
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+#include <cstring>
+#include <mutex>
+
+module Map;
+
+import Logger;
+
 /* map.cpp - Map implementation
 * Copyright (C) 2014 Paulo Pinto
 *
@@ -17,17 +30,6 @@
 * Boston, MA 02111-1307, USA.
 */
 
-
-
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <cstring>
-
-#include "Logger.h"
-#include "Node.h"
-#include "Map.h"
 
 // make the standard C++ library available on the local namespace
 using namespace std;
