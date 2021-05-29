@@ -1,7 +1,12 @@
-﻿#include "pch.h"
+﻿module;
 
-#include "App.h"
+#include "pch.h"
+
+#include "App.xaml.g.h"
+
 #include "MainPage.h"
+
+export module App;
 
 using namespace winrt;
 using namespace Windows::ApplicationModel;
@@ -12,6 +17,19 @@ using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace AStarDemo;
 using namespace AStarDemo::implementation;
+
+export namespace winrt::AStarDemo::implementation
+{
+    export struct App : AppT<App>
+    {
+        App();
+
+        void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs const&);
+        void OnSuspending(IInspectable const&, Windows::ApplicationModel::SuspendingEventArgs const&);
+        void OnNavigationFailed(IInspectable const&, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs const&);
+    };
+}
+
 
 /// <summary>
 /// Initializes the singleton application object.  This is the first line of authored code
