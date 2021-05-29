@@ -1,4 +1,6 @@
-﻿/* AStarViewModel.cpp - ViewModel for the common UI code
+﻿module;
+
+/* AStarViewModel.cpp - ViewModel for the common UI code
 * Copyright (C) 2020 Paulo Pinto
 *
 * This library is free software; you can redistribute it and/or
@@ -17,7 +19,6 @@
 * Boston, MA 02111-1307, USA.
 */
 
-import AStarLib;
 
 #include "pch.h"
 #include <sstream>
@@ -28,11 +29,16 @@ import AStarLib;
 #include <string>
 #include <memory>
 #include <thread>
+#include <future>
+#include <string>
+#include <iosfwd>
 
-#include "AStarViewModel.h"
-#if __has_include("AStarViewModel.g.cpp")
-#include "AStarViewModel.g.cpp"
-#endif
+#include "AStarViewModel.g.h"
+
+export module AStarModel;
+
+import AStarLib;
+import Map;
 
 
 // to simplify some typing
@@ -40,6 +46,58 @@ using namespace winrt::Windows::Foundation;
 using namespace winrt::Windows::Storage;
 using namespace winrt::Microsoft::Graphics::Canvas;
 using namespace winrt::Windows::UI;
+
+namespace winrt::AStarDemo::implementation
+{
+    struct AStarViewModel : AStarViewModelT<AStarViewModel>
+    {
+        AStarViewModel();
+
+        bool GoButtonEnabled();
+        void GoButtonEnabled(bool value);
+
+        winrt::Windows::Foundation::IAsyncAction LoadFile(::winrt::Windows::Storage::StorageFile const& file);
+        void Draw(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& renderTarget, ::winrt::Windows::Foundation::Size const& size);
+        void  ClearMap_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
+        void  Search_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
+        void  Stop_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
+        void MapImage_DoubleTapped(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args);
+
+        winrt::event_token PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& value);
+        void PropertyChanged(winrt::event_token const& token);
+
+        void NotifyPropertyChanged(winrt::hstring const& fieldname);
+
+    private:
+        bool goButtonEnabled;
+
+        template<typename T>
+        void ChangeFieldValue(T& field, T value, winrt::hstring const& fieldname);
+        winrt::event<Windows::UI::Xaml::Data::PropertyChangedEventHandler> propertyChanged;
+
+        Map map;
+        AStarSolver solver;
+        int marginx, marginy;
+        int dx, dy;
+        bool running;
+
+        void drawMap(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter) const;
+
+        void startSearch();
+        void stopSearch();
+        bool loadMap(std::wistream& fd);
+
+        // Handle for the A* background processing.
+        std::future<AStarSolver::NodePtr> backTask;
+    };
+}
+
+namespace winrt::AStarDemo::factory_implementation
+{
+    struct AStarViewModel : AStarViewModelT<AStarViewModel, implementation::AStarViewModel>
+    {
+    };
+}
 
 namespace winrt::AStarDemo::implementation
 {
