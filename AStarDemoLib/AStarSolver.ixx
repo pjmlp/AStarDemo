@@ -11,7 +11,7 @@ import Map;
 /**
  * Searchs for a possible path between two given points by using the A* algorithm.
  */
-class AStarSolver
+export class AStarSolver
 {
 public:
     using NodePtr = std::shared_ptr<Node>;
