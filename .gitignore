@@ -6,6 +6,7 @@
 **/obj
 **/gen
 **/libs
+**/.vs/*
 **/.settings/*
 **/.gradle/*
 **/.idea/*
