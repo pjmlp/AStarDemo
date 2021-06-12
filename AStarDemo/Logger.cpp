@@ -45,7 +45,7 @@ void LogWarning(const std::string& message)
 void LogErrno()
 {
 	const size_t errmsglen = 1024; // 1KB
-	wchar_t errmsg[errmsglen];
+	wchar_t errmsg[errmsglen] = { 0 };
 	_wcserror_s(errmsg, errno);
 
 	OutputDebugString(errmsg);

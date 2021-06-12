@@ -64,7 +64,7 @@ namespace winrt::AStarDemo::implementation
         NotifyPropertyChanged(fieldname);
     }
 
-    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), running(false)
+    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0)
     {
     }
 
@@ -235,8 +235,8 @@ namespace winrt::AStarDemo::implementation
             LogInfo("task sleeping");
             backTask.wait();
         }
-        std::string msg = "Loading file stream";
-        LogInfo(msg);
+
+        LogInfo("Loading file stream");
 
         return map.load(fd);
     }
