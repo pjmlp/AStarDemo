@@ -9,6 +9,7 @@
 **/.settings/*
 **/.gradle/*
 **/.idea/*
+**/.vs/*
 **/.navigation/*
 **/build/*
 **/proguard_cache/*
