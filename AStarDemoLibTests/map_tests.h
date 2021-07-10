@@ -27,6 +27,6 @@ TEST(MapTests, TestAddPath)
 
     map.add_path(endNode.get());
 
-    ASSERT_EQ(map.at(startNode->row(), startNode->col()), Map::CellType::END);
+    ASSERT_EQ(map.at(startNode->row(), startNode->col()), Map::CellType::START);
     ASSERT_EQ(map.at(endNode->row(), endNode->col()), Map::CellType::END);
 }
