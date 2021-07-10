@@ -141,6 +141,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>
       </WarningVersion>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +157,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>
       </WarningVersion>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +173,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>
       </WarningVersion>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -186,6 +189,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>
       </WarningVersion>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -201,6 +205,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>
       </WarningVersion>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -216,6 +221,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>
       </WarningVersion>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
