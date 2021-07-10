@@ -1,9 +1,7 @@
-module;
-
-#include <vector>
-#include <memory>
-
 export module AStarSolver;
+
+import <vector>;
+import <memory>;
 
 import Node;
 import Map;

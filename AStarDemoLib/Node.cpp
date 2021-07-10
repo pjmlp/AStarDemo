@@ -1,9 +1,3 @@
-module;
-
-#include <iostream>
-
-module Node;
-
 /* node.cpp - Node implementation
 * Copyright (C) 2014 Paulo Pinto
 *
@@ -22,8 +16,9 @@ module Node;
 * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 * Boston, MA 02111-1307, USA.
 */
+module Node;
 
-
+import <iostream>;
 
 // make the standard C++ library available on the local namespace
 using namespace std;

@@ -1,10 +1,4 @@
-module;
-
-#include <string>
-
-export module Logger;
-
-/* Logger.h - A generic interface for the logging needs of the application.
+/* Logger.ixx - A generic interface for the logging needs of the application.
 * Copyright (C) 2014 Paulo Pinto
 *
 * This library is free software; you can redistribute it and/or
@@ -22,6 +16,9 @@ export module Logger;
 * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 * Boston, MA 02111-1307, USA.
 */
+export module Logger;
+
+import <string>;
 
 /**
  * General purpose logging API.

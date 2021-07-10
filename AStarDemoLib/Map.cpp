@@ -1,16 +1,3 @@
-module;
-
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <cstring>
-#include <mutex>
-
-module Map;
-
-import Logger;
-
 /* map.cpp - Map implementation
 * Copyright (C) 2014 Paulo Pinto
 *
@@ -29,7 +16,16 @@ import Logger;
 * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 * Boston, MA 02111-1307, USA.
 */
+module Map;
 
+import <iostream>;
+import <sstream>;
+import <fstream>;
+import <string>;
+import <cstring>;
+import <mutex>;
+
+import Logger;
 
 // make the standard C++ library available on the local namespace
 using namespace std;

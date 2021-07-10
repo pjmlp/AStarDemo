@@ -1,14 +1,12 @@
-module;
-
-#include <cassert>
-#include <string>
-#include <memory>
-#include <mutex>
-#include <utility>
-#include <vector>
-#include <iosfwd>
-
 export module Map;
+
+import <cassert>;
+import <string>;
+import <memory>;
+import <mutex>;
+import <utility>;
+import <vector>;
+import <iosfwd>;
 
 import Node;
 

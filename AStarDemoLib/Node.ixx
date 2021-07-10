@@ -1,9 +1,7 @@
-module;
-
-#include <memory>
-#include <iosfwd>
-
 export module Node;
+
+import <memory>;
+import <iostream>;
 
 /**
  * This class represents nodes in the path
