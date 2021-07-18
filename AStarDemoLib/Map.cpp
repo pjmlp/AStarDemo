@@ -45,17 +45,18 @@ Map::Map(int rows, int cols):start { -1, -1 }, end{ -1, -1 }, mapRows{ rows }, m
 		col.resize(mapCols);
 	}
 }
+
 /**
 * Constructs the map by loading it from the specified filename
 * @param filename The filename where to load the data from.
 * @return false if there was an error loading the file
 */
-bool Map::load(std::wistream& fd)
+bool Map::load(std::istream& fd)
 {
-	const wstring version{ L"AStarv20" };
-
+	const string version = "AStarv20";
+	
 	size_t row = 0;
-	wstring str;
+	string str;
 
 	while (!fd.eof()) {
 		if (row == 0) {
@@ -65,8 +66,7 @@ bool Map::load(std::wistream& fd)
 			}
 		}
 		else if (row == 1) {
-			fd >> tileWidth >> tileHeigth >> str;
-			//fd >> tileset;
+			fd >> tileWidth >> tileHeigth >> tileset;
 		}
 		else if (row == 2) {
 			fd >> mapRows >> mapCols;

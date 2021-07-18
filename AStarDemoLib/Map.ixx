@@ -22,7 +22,7 @@ public:
     explicit Map(int rows, int cols);
 
 
-    bool load(std::wistream& fd);
+    bool load(std::istream& fd);
 
     void clear() noexcept;
 
