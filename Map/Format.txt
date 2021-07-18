@@ -1,10 +1,14 @@
 The maps are built as follows:
 
-First line contains the file format version, e.g. AStarv10
+First line contains the file format version, e.g. AStarv20
 
-The second line contains the amount of rows cols in the map
+The second line contains the tileset information with width height tileset-filename.
+
+The third line contains the amount of rows cols in the map
 
 The remaing n rows contain m cols of ascii characthers representing map cells, with the following meaning:
 
 => . free position
 => * wall (by convention, it can actually be anything but .)
+
+The previous version (AStarv10) lacked tileset information.
