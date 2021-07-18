@@ -160,12 +160,6 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Node.ixx" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AStarSolver.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Node.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
