@@ -30,6 +30,12 @@ public:
 
     int rows() const noexcept { return mapRows; }
 
+    int tilesWidth() const noexcept { return tileWidth; }
+
+    int tilesHeigth() const noexcept { return tileHeigth; }
+
+    std::string tilesetFilename() const noexcept { return tileset; }
+
     // Declared as inline member function so that we get the abstraction
     // without speed penalty. 
     [[gsl::suppress(bounds.4)]]
@@ -72,4 +78,6 @@ private:
     mutable std::mutex m_map_mutex;
     std::pair<int, int> start, end;
     int mapRows, mapCols;
+    int tileWidth, tileHeigth;
+    std::string tileset;
 };

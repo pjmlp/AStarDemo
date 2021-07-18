@@ -52,7 +52,7 @@ Map::Map(int rows, int cols):start { -1, -1 }, end{ -1, -1 }, mapRows{ rows }, m
 */
 bool Map::load(std::wistream& fd)
 {
-	const wstring version{ L"AStarv10" };
+	const wstring version{ L"AStarv20" };
 
 	size_t row = 0;
 	wstring str;
@@ -65,6 +65,10 @@ bool Map::load(std::wistream& fd)
 			}
 		}
 		else if (row == 1) {
+			fd >> tileWidth >> tileHeigth >> str;
+			//fd >> tileset;
+		}
+		else if (row == 2) {
 			fd >> mapRows >> mapCols;
 			m_map.resize(mapRows);
 			for (auto& col : m_map) {
