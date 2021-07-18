@@ -157,7 +157,6 @@
     <ClCompile Include="Logger.ixx" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Map.ixx" />
-    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Node.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
