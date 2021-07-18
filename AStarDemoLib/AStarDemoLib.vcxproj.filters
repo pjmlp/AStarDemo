@@ -18,9 +18,6 @@
     <ClCompile Include="AStarLib.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AStarSolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AStarSolver.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>

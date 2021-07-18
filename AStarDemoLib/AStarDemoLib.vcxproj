@@ -152,7 +152,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStarLib.ixx" />
-    <ClCompile Include="AStarSolver.cpp" />
     <ClCompile Include="AStarSolver.ixx" />
     <ClCompile Include="Logger.ixx" />
     <ClCompile Include="Map.ixx" />
