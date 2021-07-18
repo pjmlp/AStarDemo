@@ -27,9 +27,6 @@
     <ClCompile Include="Logger.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Map.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
