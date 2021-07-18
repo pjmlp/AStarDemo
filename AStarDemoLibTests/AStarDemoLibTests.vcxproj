@@ -74,6 +74,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>18</WarningVersion>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <AdditionalBMIDirectories>$(IntDir)</AdditionalBMIDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -92,6 +93,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>18</WarningVersion>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <AdditionalBMIDirectories>$(IntDir)</AdditionalBMIDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -109,6 +111,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>18</WarningVersion>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <AdditionalBMIDirectories>$(IntDir)</AdditionalBMIDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,6 +131,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <WarningVersion>18</WarningVersion>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <AdditionalBMIDirectories>$(IntDir)</AdditionalBMIDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
