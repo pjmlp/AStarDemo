@@ -54,7 +54,7 @@ Map::Map(int rows, int cols):start { -1, -1 }, end{ -1, -1 }, mapRows{ rows }, m
 */
 bool Map::load(std::wistream& fd)
 {
-	const wstring version{ L"AStarv10" };
+	const wstring version{ L"AStarv20" };
 
 	size_t row = 0;
 	wstring str;
@@ -67,6 +67,10 @@ bool Map::load(std::wistream& fd)
 			}
 		}
 		else if (row == 1) {
+			fd >> tileWidth >> tileHeigth >> str;
+			// fd >> tileWidth >> tileHeigth >> tileset;
+		}
+		else if (row == 2) {
 			fd >> mapRows >> mapCols;
 			m_map.resize(mapRows);
 			for (auto& col : m_map) {
@@ -76,7 +80,7 @@ bool Map::load(std::wistream& fd)
 		else {
 			fd >> str;
 
-			for (size_t i = 0; i < mapCols; ++i) {
+			for (size_t i = 0; i < mapCols - 1; ++i) {
 				if (str.at(i) == '.') {
 					m_map.at(row - 2).at(i) = CellType::FREE;
 				}
@@ -86,6 +90,11 @@ bool Map::load(std::wistream& fd)
 			}
 		}
 		++row;
+
+		// safety check for out of bounds regarding rows being read
+		if (row - 2 >= mapRows) {
+			return false;
+		}
 	}
 
 	return true;
