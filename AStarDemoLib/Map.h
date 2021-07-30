@@ -56,7 +56,7 @@ public:
 
     int tilesHeigth() const noexcept { return tileHeigth; }
 
-    std::string tilesetFilename() const noexcept { return tileset; }
+    std::wstring tilesetFilename() const noexcept { return tileset; }
 
 	// Declared as inline member function so that we get the abstraction
 	// without speed penalty. 
@@ -100,7 +100,7 @@ private:
     std::pair<int, int> start, end;
 	int mapRows, mapCols;
     int tileWidth, tileHeigth;
-    std::string tileset;
+    std::wstring tileset;
 };
 
 #endif // MAP_H
