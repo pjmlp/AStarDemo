@@ -3,14 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AStarDemoLib", "..\AStarDemoLib\AStarDemoLib.vcxproj", "{4984905F-ADB3-4E5E-9F6E-DDCF40BEAC6C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AStarDemoLib", "AStarDemoLib\AStarDemoLib.vcxproj", "{4984905F-ADB3-4E5E-9F6E-DDCF40BEAC6C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AStarDemoLibTests", "..\AStarDemoLibTests\AStarDemoLibTests.vcxproj", "{0A8059E9-D187-4CF0-A856-ADEF720703D1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AStarDemoLibTests", "AStarDemoLibTests\AStarDemoLibTests.vcxproj", "{0A8059E9-D187-4CF0-A856-ADEF720703D1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AStarDemo", "AStarDemo.vcxproj", "{756E5253-BED5-417A-8EB8-817E0D79EA5A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4984905F-ADB3-4E5E-9F6E-DDCF40BEAC6C} = {4984905F-ADB3-4E5E-9F6E-DDCF40BEAC6C}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AStarDemo", "AStarDemo\AStarDemo.vcxproj", "{756E5253-BED5-417A-8EB8-817E0D79EA5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
