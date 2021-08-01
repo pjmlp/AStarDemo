@@ -33,6 +33,10 @@ It is only required to open the project solution located at *AStarDemo/AStarDemo
 
 The wonderful [A* tutorials](http://theory.stanford.edu/~amitp/GameProgramming/) from Amit Patel.
 
+# Tilesets
+
+The tiles were taken from http://opengameart.org/content/simple-tileset
+
 # License
 
 This example application is under GPL2 (except for the wizard generated code for Windows lifecycle management).
