@@ -28,4 +28,6 @@
       </uap:VisualElements>
     </Application>
   </Applications>
+  <Capabilities>
+    <uap:Capability Name="picturesLibrary"/></Capabilities>
 </Package>
