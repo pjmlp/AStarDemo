@@ -28,12 +28,12 @@ namespace AStarDemo
         Boolean GoButtonEnabled;
         void LoadFile(Windows.Storage.StorageFile file);
         void Draw(Microsoft.Graphics.Canvas.CanvasDrawingSession session, Windows.Foundation.Size size);
+        Windows.Foundation.IAsyncAction LoadImages(Microsoft.Graphics.Canvas.CanvasDevice device);
 
         // event handlers
         void  Search_Click(Object sender, Windows.UI.Xaml.RoutedEventArgs args);
         void  Stop_Click(Object sender, Windows.UI.Xaml.RoutedEventArgs args);
         void  ClearMap_Click(Object sender, Windows.UI.Xaml.RoutedEventArgs args);
         void  MapImage_DoubleTapped(Object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs args);
-
     }
 }

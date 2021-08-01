@@ -9,8 +9,11 @@
 #include "AStarViewModel.h"
 
 using namespace winrt;
-using namespace Windows::Foundation;
-using namespace Windows::UI::Xaml;
+using namespace winrt::Microsoft::Graphics::Canvas;
+using namespace winrt::Windows::Foundation;
+using namespace winrt::Windows::UI::Xaml;
+
+
 
 namespace winrt::AStarDemo::implementation
 {
@@ -46,7 +49,7 @@ namespace winrt::AStarDemo::implementation
         openPicker.FileTypeFilter().Append(L".txt");
 
         StorageFile file = co_await openPicker.PickSingleFileAsync();
-        if (file.IsAvailable()) {
+        if (file != nullptr && file.IsAvailable()) {
             modelView.LoadFile(file);
         }
     }
@@ -59,8 +62,23 @@ namespace winrt::AStarDemo::implementation
 
     }
 
-    void MainPage::MapCanvas_CreateResources(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const&, ::winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs const&)
+    void MainPage::MapCanvas_CreateResources(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const& sender, ::winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs const& args)
     {
+        bool spriteBatchSupported = CanvasSpriteBatch::IsSupported(sender.Device());
+        if (!spriteBatchSupported) {
+            return;
+        }
+
+        args.TrackAsyncAction(LoadImages(sender.Device()));
+    }
+
+    IAsyncAction MainPage::LoadImages(const CanvasDevice& device)
+    {
+        if (modelView != nullptr) {
+            co_await modelView.LoadImages(device);
+        }
+
+        co_return;
     }
 
 

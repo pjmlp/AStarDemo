@@ -44,9 +44,11 @@
 
 // to simplify some typing
 using namespace winrt::Windows::Foundation;
+using namespace winrt::Windows::Foundation::Numerics;
 using namespace winrt::Windows::Storage;
 using namespace winrt::Microsoft::Graphics::Canvas;
 using namespace winrt::Windows::UI;
+
 
 namespace winrt::AStarDemo::implementation
 {
@@ -64,7 +66,7 @@ namespace winrt::AStarDemo::implementation
         NotifyPropertyChanged(fieldname);
     }
 
-    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0)
+    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr)
     {
     }
 
@@ -237,8 +239,19 @@ namespace winrt::AStarDemo::implementation
         }
 
         LogInfo("Loading file stream");
-
+         
         return map.load(fd);
+    }
+
+    IAsyncAction AStarViewModel::LoadImages(const CanvasDevice& device)
+    {
+        auto ptr = co_await SpriteSheet::LoadAsync(device, L"Assets/Tiles.png", float2(64, 64), float2::zero());
+        if (ptr != nullptr) {
+            tiles = std::unique_ptr<SpriteSheet>(ptr);
+        }
+
+
+        co_return;
     }
 
     /**
@@ -249,7 +262,7 @@ namespace winrt::AStarDemo::implementation
     {
 
         // now draw the real map contents
-        int r = 0, g = 0, b = 0;
+        uint8_t r = 0, g = 0, b = 0;
         for (int row = 0; row < map.rows(); ++row) {
             for (int col = 0; col < map.columns(); ++col) {
                 switch (map.at(row, col)) {
@@ -278,7 +291,12 @@ namespace winrt::AStarDemo::implementation
                     break;
                 }
 
-                Rect rect(marginx + (col * dx), marginy + (row * dy), dx, dy);
+                Rect rect{
+                    static_cast<float>(marginx + (col * dx)),
+                    static_cast<float>(marginy + (row * dy)),
+                    static_cast<float>(dx),
+                    static_cast<float>(dy)
+                };
                 Color color = ColorHelper::FromArgb(255, r, g, b);
                 painter.FillRectangle(rect, color);
             }

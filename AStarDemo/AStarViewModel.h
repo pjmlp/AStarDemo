@@ -28,6 +28,7 @@
 #include <string>
 #include <iosfwd>
 
+#include "SpriteSheet.h"
 #include "Map.h"
 #include "AStarSolver.h"
 
@@ -52,6 +53,8 @@ namespace winrt::AStarDemo::implementation
 
         void NotifyPropertyChanged(winrt::hstring const& fieldname);
 
+        winrt::Windows::Foundation::IAsyncAction LoadImages(::winrt::Microsoft::Graphics::Canvas::CanvasDevice const& device);
+
     private:
         bool goButtonEnabled;
 
@@ -70,6 +73,8 @@ namespace winrt::AStarDemo::implementation
         void startSearch();
         void stopSearch();
         bool loadMap(std::wistream& fd);
+
+        std::unique_ptr<SpriteSheet> tiles;
 
         // Handle for the A* background processing.
         std::future<AStarSolver::NodePtr> backTask;
