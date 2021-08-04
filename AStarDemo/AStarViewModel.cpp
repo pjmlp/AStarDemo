@@ -243,9 +243,13 @@ namespace winrt::AStarDemo::implementation
         return map.load(fd);
     }
 
+    /**
+     * Loads the images required for the level being drawn.
+     * @param device the Win2D to draw into.
+     */
     IAsyncAction AStarViewModel::LoadImages(const CanvasDevice& device)
     {
-        auto ptr = co_await SpriteSheet::LoadAsync(device, L"Assets/Tiles.png", float2(64, 64), float2::zero());
+        auto ptr = co_await SpriteSheet::LoadAsync(device, L"Assets/Tiles.png", float2(32, 32), float2::zero());
         if (ptr != nullptr) {
             tiles = std::unique_ptr<SpriteSheet>(ptr);
         }
@@ -300,6 +304,11 @@ namespace winrt::AStarDemo::implementation
                 Color color = ColorHelper::FromArgb(255, r, g, b);
                 painter.FillRectangle(rect, color);
             }
+        }
+
+        if (tiles != nullptr) {
+            CanvasSpriteBatch sprites = painter.CreateSpriteBatch();
+            tiles->Draw(sprites, 1, float2::zero(), float4::one());
         }
     }
 }
