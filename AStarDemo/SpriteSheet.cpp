@@ -6,8 +6,9 @@ using namespace ::winrt::Windows::Foundation::Numerics;
 using namespace ::winrt::Microsoft::Graphics::Canvas;
 
 
-SpriteSheet::SpriteSheet(const canvas::CanvasBitmap& bitmap, float2 spriteSize, float2 origin):bitmap(bitmap), spriteSize(spriteSize), origin(origin), spritesPerRow(0)
+SpriteSheet::SpriteSheet(const canvas::CanvasBitmap& bitmap, float2 spriteSize, float2 origin):bitmap(bitmap), spriteSize(spriteSize), origin(origin)
 {
+    spritesPerRow = static_cast<int>(bitmap.Size().Width / spriteSize.x);
 }
 
 concurrency::task<SpriteSheet*> SpriteSheet::LoadAsync(CanvasDevice device, const winrt::hstring& filename, float2 spriteSize, float2 origin)
