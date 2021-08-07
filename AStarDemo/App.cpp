@@ -39,7 +39,7 @@ App::App()
 /// will be used such as when the application is launched to open a specific file.
 /// </summary>
 /// <param name="e">Details about the launch request and process.</param>
-void App::OnLaunched(LaunchActivatedEventArgs const& e)
+void App::OnLaunched(const LaunchActivatedEventArgs& e)
 {
     Frame rootFrame{ nullptr };
     auto content = Window::Current().Content();
@@ -103,7 +103,7 @@ void App::OnLaunched(LaunchActivatedEventArgs const& e)
 /// </summary>
 /// <param name="sender">The source of the suspend request.</param>
 /// <param name="e">Details about the suspend request.</param>
-void App::OnSuspending([[maybe_unused]] IInspectable const& sender, [[maybe_unused]] SuspendingEventArgs const& e)
+void App::OnSuspending([[maybe_unused]] const IInspectable& sender, [[maybe_unused]] const SuspendingEventArgs& e)
 {
     // Save application state and stop any background activity
 }
@@ -113,7 +113,7 @@ void App::OnSuspending([[maybe_unused]] IInspectable const& sender, [[maybe_unus
 /// </summary>
 /// <param name="sender">The Frame which failed navigation</param>
 /// <param name="e">Details about the navigation failure</param>
-void App::OnNavigationFailed(IInspectable const&, NavigationFailedEventArgs const& e)
+void App::OnNavigationFailed(const IInspectable&, const NavigationFailedEventArgs& e)
 {
     throw hresult_error(E_FAIL, hstring(L"Failed to load Page ") + e.SourcePageType().Name);
 }
