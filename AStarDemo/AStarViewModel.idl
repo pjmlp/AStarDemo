@@ -35,5 +35,8 @@ namespace AStarDemo
         void  Stop_Click(Object sender, Windows.UI.Xaml.RoutedEventArgs args);
         void  ClearMap_Click(Object sender, Windows.UI.Xaml.RoutedEventArgs args);
         void  MapImage_DoubleTapped(Object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs args);
+        void  MapImage_PointerPressed(Object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args);
+        void  MapImage_PointerMoved(Object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args);
+        void  MapImage_PointerReleased(Object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args);
     }
 }
