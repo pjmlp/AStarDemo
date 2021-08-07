@@ -10,15 +10,15 @@ namespace winrt::AStarDemo::implementation
 
         AStarDemo::AStarViewModel MainViewModel();
 
-        winrt::fire_and_forget OpenMap_Click(::winrt::Windows::Foundation::IInspectable const& sender, ::winrt::Windows::UI::Xaml::RoutedEventArgs const& args);
-        void Page_Unloaded(IInspectable const& sender, ::winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
-        void MapCanvas_CreateResources(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const& sender, ::winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs const& args);
-        void MapCanvas_Draw(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const& sender, ::winrt::Microsoft::Graphics::Canvas::UI::Xaml::CanvasAnimatedDrawEventArgs const& args);
+        winrt::fire_and_forget OpenMap_Click(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::RoutedEventArgs& args);
+        void Page_Unloaded(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::RoutedEventArgs& e);
+        void MapCanvas_CreateResources(const winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl& sender, const winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs& args);
+        void MapCanvas_Draw(const winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl& sender, const winrt::Microsoft::Graphics::Canvas::UI::Xaml::CanvasAnimatedDrawEventArgs& args);
 
     private:
         AStarDemo::AStarViewModel modelView;
 
-        ::winrt::Windows::Foundation::IAsyncAction LoadImages(const ::winrt::Microsoft::Graphics::Canvas::CanvasDevice& device);
+        winrt::Windows::Foundation::IAsyncAction LoadImages(const winrt::Microsoft::Graphics::Canvas::CanvasDevice& device);
     };
 }
 

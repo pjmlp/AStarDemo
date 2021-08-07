@@ -10,8 +10,11 @@
 
 using namespace winrt;
 using namespace winrt::Microsoft::Graphics::Canvas;
+using namespace winrt::Microsoft::Graphics::Canvas::UI;
+using namespace winrt::Microsoft::Graphics::Canvas::UI::Xaml;
 using namespace winrt::Windows::Foundation;
 using namespace winrt::Windows::UI::Xaml;
+
 
 
 
@@ -26,6 +29,9 @@ namespace winrt::AStarDemo::implementation
         GoBtn().Click({ &modelView, &AStarDemo::AStarViewModel::Search_Click });
         StopBtn().Click({ &modelView, &AStarDemo::AStarViewModel::Stop_Click });
         MapCanvas().DoubleTapped({ &modelView, &AStarDemo::AStarViewModel::MapImage_DoubleTapped });
+        MapCanvas().PointerPressed({ &modelView, &AStarDemo::AStarViewModel::MapImage_PointerPressed });
+        MapCanvas().PointerReleased({ &modelView, &AStarDemo::AStarViewModel::MapImage_PointerReleased });
+        MapCanvas().PointerMoved({ &modelView, &AStarDemo::AStarViewModel::MapImage_PointerMoved });
     }
 
     AStarDemo::AStarViewModel MainPage::MainViewModel()
@@ -36,7 +42,7 @@ namespace winrt::AStarDemo::implementation
     /**
      * Presents a file chooser whent he user clicks the respecite application button.
      */
-    winrt::fire_and_forget MainPage::OpenMap_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args)
+    winrt::fire_and_forget MainPage::OpenMap_Click(const IInspectable& sender, const RoutedEventArgs& args)
     {
         // to reduce typing
         using namespace winrt::Windows::Storage;
@@ -54,7 +60,7 @@ namespace winrt::AStarDemo::implementation
         }
     }
 
-    void MainPage::MapCanvas_Draw(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const& sender, ::winrt::Microsoft::Graphics::Canvas::UI::Xaml::CanvasAnimatedDrawEventArgs const& args)
+    void MainPage::MapCanvas_Draw(const ICanvasAnimatedControl& sender, const CanvasAnimatedDrawEventArgs& args)
     {
         if (modelView != nullptr) {
             modelView.Draw(args.DrawingSession(), sender.Size());
@@ -62,7 +68,7 @@ namespace winrt::AStarDemo::implementation
 
     }
 
-    void MainPage::MapCanvas_CreateResources(::winrt::Microsoft::Graphics::Canvas::UI::Xaml::ICanvasAnimatedControl const& sender, ::winrt::Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesEventArgs const& args)
+    void MainPage::MapCanvas_CreateResources(const ICanvasAnimatedControl& sender, const CanvasCreateResourcesEventArgs& args)
     {
         bool spriteBatchSupported = CanvasSpriteBatch::IsSupported(sender.Device());
         if (!spriteBatchSupported) {
@@ -82,7 +88,7 @@ namespace winrt::AStarDemo::implementation
     }
 
 
-    void MainPage::Page_Unloaded(IInspectable const&, RoutedEventArgs const&)
+    void MainPage::Page_Unloaded(const IInspectable&, const RoutedEventArgs&)
     {
         // ensure that the control is properly cleaned
         MapCanvas().RemoveFromVisualTree();
