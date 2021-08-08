@@ -38,5 +38,6 @@ namespace AStarDemo
         void  MapImage_PointerPressed(Object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args);
         void  MapImage_PointerMoved(Object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args);
         void  MapImage_PointerReleased(Object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args);
+        void  MapImage_KeyDown(Object sender, Windows.UI.Core.KeyEventArgs args);
     }
 }

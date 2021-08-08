@@ -32,6 +32,8 @@ namespace winrt::AStarDemo::implementation
         MapCanvas().PointerPressed({ &modelView, &AStarDemo::AStarViewModel::MapImage_PointerPressed });
         MapCanvas().PointerReleased({ &modelView, &AStarDemo::AStarViewModel::MapImage_PointerReleased });
         MapCanvas().PointerMoved({ &modelView, &AStarDemo::AStarViewModel::MapImage_PointerMoved });
+
+        Window::Current().CoreWindow().KeyDown({ &modelView, &AStarDemo::AStarViewModel::MapImage_KeyDown });
     }
 
     AStarDemo::AStarViewModel MainPage::MainViewModel()
