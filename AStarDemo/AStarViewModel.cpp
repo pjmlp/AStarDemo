@@ -48,6 +48,11 @@ using namespace winrt::Windows::Foundation::Numerics;
 using namespace winrt::Windows::Storage;
 using namespace winrt::Microsoft::Graphics::Canvas;
 using namespace winrt::Windows::UI;
+using namespace winrt::Windows::UI::Core;
+using namespace winrt::Windows::UI::Xaml;
+using namespace winrt::Windows::UI::Xaml::Data;
+using namespace winrt::Windows::UI::Xaml::Input;
+using namespace winrt::Windows::System;
 
 
 namespace winrt::AStarDemo::implementation
@@ -60,13 +65,13 @@ namespace winrt::AStarDemo::implementation
      * @param fieldname the fieldname to use in the notification.
      */
     template<typename T>
-    void AStarViewModel::ChangeFieldValue(T& field, T value, winrt::hstring const& fieldname)
+    void AStarViewModel::ChangeFieldValue(T& field, T value, const winrt::hstring& fieldname)
     {
         field = value;
         NotifyPropertyChanged(fieldname);
     }
 
-    AStarViewModel::AStarViewModel(): goButtonEnabled(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr)
+    AStarViewModel::AStarViewModel(): goButtonEnabled(false), mouseActive(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr), startMapX(0), startMapY(0)
     {
     }
 
@@ -83,13 +88,13 @@ namespace winrt::AStarDemo::implementation
     /**
      * @brief Loads the requested filename from the filesystem.
      */
-    IAsyncAction AStarViewModel::LoadFile(StorageFile const& file)
+    IAsyncAction AStarViewModel::LoadFile(const StorageFile& file)
     {
         winrt::hstring data = co_await FileIO::ReadTextAsync(file);
         std::wstring str(data.data());
         std::wistringstream buffer(str);
 
-        if (loadMap(buffer))
+        if (LoadMap(buffer))
         {
             ChangeFieldValue(goButtonEnabled, true, L"GoButtonEnabled");
         }
@@ -98,7 +103,7 @@ namespace winrt::AStarDemo::implementation
     /**
      * @brief Draws the current state into the drawing surface, with the provided size.
      */
-    void AStarViewModel::Draw(CanvasDrawingSession const& renderTarget, Size const& size)
+    void AStarViewModel::Draw(const CanvasDrawingSession& renderTarget, const Size& size)
     {
         if (renderTarget != nullptr) {
             if (map.columns() > 0 && map.rows() > 0) {
@@ -107,10 +112,14 @@ namespace winrt::AStarDemo::implementation
                 dy = static_cast<int>(size.Height / map.rows());
                 marginy = (static_cast<int>(size.Height) % map.rows()) / 2;
 
+                // Win2D
+                tilesPerRow = static_cast<int>(size.Width / map.tilesWidth());
+                tilesPerHeight = static_cast<int>(size.Width / map.tilesHeigth());
+
                 // render the background
                 renderTarget.Clear(Colors::White());
 
-                drawMap(renderTarget);
+                DrawMap(renderTarget);
             }
         }
     }
@@ -118,29 +127,29 @@ namespace winrt::AStarDemo::implementation
     /**
      *  @brief stops the current search if any and clears the loaded map.
      */
-    void  AStarViewModel::ClearMap_Click(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::RoutedEventArgs const&)
+    void  AStarViewModel::ClearMap_Click(const IInspectable&, const RoutedEventArgs&)
     {
-        stopSearch();
+        StopSearch();
         map.clear();
     }
 
     /**
      *  @brief Triggers a new search, if none is currently running.
      */
-    void  AStarViewModel::Search_Click(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::RoutedEventArgs const&)
+    void  AStarViewModel::Search_Click(const IInspectable&, const RoutedEventArgs&)
     {
         ChangeFieldValue(goButtonEnabled, false, L"GoButtonEnabled");
 
-        startSearch();
+        StartSearch();
     }
 
     /**
      *  @brief Stops the current search, if one is taking place.
      */
-    void  AStarViewModel::Stop_Click(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::RoutedEventArgs const&)
+    void  AStarViewModel::Stop_Click(const IInspectable&, const RoutedEventArgs&)
     {
         if (running) {
-            stopSearch();
+            StopSearch();
             ChangeFieldValue(goButtonEnabled, true, L"GoButtonEnabled");
         }
     }
@@ -148,20 +157,87 @@ namespace winrt::AStarDemo::implementation
     /**
      *  @brief Handles double click action.
      */
-    void AStarViewModel::MapImage_DoubleTapped(Windows::Foundation::IInspectable const&, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args)
+    void AStarViewModel::MapImage_DoubleTapped(const IInspectable&, const DoubleTappedRoutedEventArgs& args)
     {
         auto point = args.GetPosition(nullptr);
-        auto col = static_cast<int>((point.X - marginx) / dx);
-        auto row = static_cast<int>((point.Y - marginy) / dy);
+        auto col = static_cast<int>((point.X - marginx) / map.tilesWidth());
+        auto row = static_cast<int>((point.Y - marginy) / map.tilesHeigth());
 
         auto startPos = map.get_start();
         auto endPos = map.get_end();
 
         if (startPos.first == -1 && startPos.second == -1) {
-            map.set_pos(row, col, Map::CellType::START);
+            map.set_pos(row + startMapY, col + startMapY, Map::CellType::START);
         }
         else if (endPos.first == -1 && endPos.second == -1) {
-            map.set_pos(row, col, Map::CellType::END);
+            map.set_pos(row + startMapY, col + startMapY, Map::CellType::END);
+        }
+    }
+
+    /**
+     *  @brief Handles the mouse being pressed down event.
+     */
+    void AStarViewModel::MapImage_PointerPressed(const IInspectable&, const PointerRoutedEventArgs&)
+    {
+        mouseActive = true;
+    }
+    
+    /**
+     *  @brief Handles the mouse being moved event.
+     */
+    void AStarViewModel::MapImage_PointerMoved(const IInspectable& sender, const PointerRoutedEventArgs& args)
+    {
+        static winrt::Windows::Foundation::Point lastPoint{};
+
+        if (mouseActive) {
+            winrt::Windows::UI::Xaml::UIElement elem = sender.as<winrt::Windows::UI::Xaml::UIElement>();
+            winrt::Windows::Foundation::Point pos = args.GetCurrentPoint(elem).Position();
+
+            float deltaX = lastPoint.X - pos.X;
+            float deltaY = lastPoint.Y - pos.Y;
+
+            startMapX = startMapX + deltaX / map.tilesWidth();
+            startMapY = startMapY + deltaY / map.tilesHeigth();
+
+
+            lastPoint = pos;
+        }
+    }
+    
+    /**
+     *  @brief Handles the mouse being released event.
+     */
+    void AStarViewModel::MapImage_PointerReleased(const IInspectable&, const PointerRoutedEventArgs&)
+    {
+        mouseActive = false;
+    }
+
+    /**
+     *  @brief Handles the mouse being pressed down event.
+     */
+    void AStarViewModel::MapImage_KeyDown(const IInspectable&, const KeyEventArgs& e)
+    {
+        switch (e.VirtualKey()) {
+        case VirtualKey::Up:
+            if (startMapY > 0) {
+                startMapY--;
+            }
+            break;
+        case VirtualKey::Down:
+            if (startMapY < tilesPerHeight && startMapY  < map.rows() - 1) {
+                startMapY++;
+            }
+            break;
+        case VirtualKey::Left:
+            if (startMapX > 0) {
+                startMapX--;
+            }
+            break;
+        case VirtualKey::Right:
+            if (startMapX < tilesPerRow && startMapX < map.columns() - 1) {
+                startMapX++;
+            }
+            break;
         }
     }
 
@@ -169,7 +245,7 @@ namespace winrt::AStarDemo::implementation
      * @brief Support member function for the INotifyPropertyChanged UWP interface.
      * @param fieldname The name of field to notify to the bindings
      */
-    void AStarViewModel::NotifyPropertyChanged(winrt::hstring const& fieldname)
+    void AStarViewModel::NotifyPropertyChanged(const winrt::hstring& fieldname)
     {
         propertyChanged(*this, Windows::UI::Xaml::Data::PropertyChangedEventArgs{ fieldname });
     }
@@ -179,7 +255,7 @@ namespace winrt::AStarDemo::implementation
      * @param token The notification token for the UI binding.
      * @returns The current notification token for the UI binding, after updating it.
      */
-    winrt::event_token AStarViewModel::PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& token)
+    winrt::event_token AStarViewModel::PropertyChanged(const PropertyChangedEventHandler& token)
     {
         return propertyChanged.add(token);
     }
@@ -196,7 +272,7 @@ namespace winrt::AStarDemo::implementation
     /**
     *  @brief Starts the background processing for the A* search with the currently loaded map.
     */
-    void AStarViewModel::startSearch()
+    void AStarViewModel::StartSearch()
     {
         auto startPos = map.get_start();
         auto endPos = map.get_end();
@@ -212,7 +288,7 @@ namespace winrt::AStarDemo::implementation
             // now find the result
             auto res = solver.find(start, end);
             map.add_path(res.get());
-            this->stopSearch();
+            this->StopSearch();
             return res;
         });
     }
@@ -220,16 +296,16 @@ namespace winrt::AStarDemo::implementation
     /**
      *   @brief Stops the current search, if any.
      */
-    void AStarViewModel::stopSearch()
+    void AStarViewModel::StopSearch()
     {
         running = false;
     }
 
 
     /**
-    *  loads a new map into the application.
-    */
-    bool AStarViewModel::loadMap(std::wistream& fd)
+     *   @brief loads a new map into the application.
+     */
+    bool AStarViewModel::LoadMap(std::wistream& fd)
     {
         LogInfo("loading map");
         // Just in case another search is ongoing
@@ -244,7 +320,7 @@ namespace winrt::AStarDemo::implementation
     }
 
     /**
-     * Loads the images required for the level being drawn.
+     *  @brief Loads the images required for the level being drawn.
      * @param device the Win2D to draw into.
      */
     IAsyncAction AStarViewModel::LoadImages(const CanvasDevice& device)
@@ -259,56 +335,63 @@ namespace winrt::AStarDemo::implementation
     }
 
     /**
-     *  MapRender::draw_map Draws the real map.
-     * @param painter
+     * @brief MapRender::draw_map Draws the real map.
+     * @param device the Win2D to draw into.
      */
-    void AStarViewModel::drawMap(CanvasDrawingSession const& painter) const
+    void AStarViewModel::DrawMap(const CanvasDrawingSession& painter) const
     {
-
-        // now draw the real map contents
-        uint8_t r = 0, g = 0, b = 0;
-        for (int row = 0; row < map.rows(); ++row) {
-            for (int col = 0; col < map.columns(); ++col) {
-                switch (map.at(row, col)) {
-                case Map::CellType::FREE:
-                    r = 255; g = 255; b = 255;
-                    break;
-
-                case Map::CellType::BLOCKED:
-                    r = 0; g = 255; b = 0;
-                    break;
-
-                case Map::CellType::VISITED:
-                    r = 0; g = 255; b = 255;
-                    break;
-
-                case Map::CellType::NODE_PATH:
-                    r = 255; g = 0; b = 255;
-                    break;
-
-                case Map::CellType::START:
-                    r = 255; g = 0; b = 0;
-                    break;
-
-                case Map::CellType::END:
-                    r = 0; g = 0; b = 255;
-                    break;
-                }
-
-                Rect rect{
-                    static_cast<float>(marginx + (col * dx)),
-                    static_cast<float>(marginy + (row * dy)),
-                    static_cast<float>(dx),
-                    static_cast<float>(dy)
-                };
-                Color color = ColorHelper::FromArgb(255, r, g, b);
-                painter.FillRectangle(rect, color);
-            }
-        }
-
         if (tiles != nullptr) {
             CanvasSpriteBatch sprites = painter.CreateSpriteBatch();
-            tiles->Draw(sprites, 1, float2::zero(), float4::one());
+
+            for (int row = 0; row < tilesPerHeight && row + startMapY < map.rows(); ++row) {
+                for (int col = 0; col < tilesPerRow && col + startMapX < map.columns(); ++col) {
+                    int spriteId = MapToSpriteId(map.at(row + startMapY, col + startMapX));
+
+                    float2 dest{
+                        static_cast<float>(col * map.tilesWidth()),
+                        static_cast<float>(row * map.tilesHeigth())
+                    };
+                    tiles->Draw(sprites, spriteId, dest, float4::one());
+                }
+            }
         }
+    }
+
+    /**
+     * @brief Converts the enumeration numeric value into the appropriate sprite index from the
+     * current sprite sheet.
+     * 
+     * @param cell The cell value of the map position
+     * @return The corresponding sprint index value
+     */
+    int AStarViewModel::MapToSpriteId(Map::CellType cell) const {
+        switch (cell) {
+        case Map::CellType::FREE:
+            return 0;
+
+        case Map::CellType::BLOCKED:
+            return 1;
+            break;
+
+        case Map::CellType::VISITED:
+            return 7;
+            break;
+
+        case Map::CellType::NODE_PATH:
+            return 6;
+            break;
+
+        case Map::CellType::START:
+            return 5;
+            break;
+
+        case Map::CellType::END:
+            return 4;
+            break;
+
+        default:
+            throw new std::logic_error("Missing mapping");
+        }
+        
     }
 }

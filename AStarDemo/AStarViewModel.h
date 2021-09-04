@@ -41,38 +41,47 @@ namespace winrt::AStarDemo::implementation
         bool GoButtonEnabled();
         void GoButtonEnabled(bool value);
 
-        winrt::Windows::Foundation::IAsyncAction LoadFile(::winrt::Windows::Storage::StorageFile const& file);
-        void Draw(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& renderTarget, ::winrt::Windows::Foundation::Size const& size);
-        void  ClearMap_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
-        void  Search_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
-        void  Stop_Click(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::RoutedEventArgs const& args);
-        void MapImage_DoubleTapped(Windows::Foundation::IInspectable const& sender, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args);
+        winrt::Windows::Foundation::IAsyncAction LoadFile(const winrt::Windows::Storage::StorageFile& file);
+        void Draw(const winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession& renderTarget, const winrt::Windows::Foundation::Size& size);
+        void  ClearMap_Click(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::RoutedEventArgs& args);
+        void  Search_Click(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::RoutedEventArgs& args);
+        void  Stop_Click(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::RoutedEventArgs& args);
+        void MapImage_DoubleTapped(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs& args);
+        void MapImage_PointerPressed(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::Input::PointerRoutedEventArgs& args);
+        void MapImage_PointerMoved(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::Input::PointerRoutedEventArgs& args);
+        void MapImage_PointerReleased(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::Input::PointerRoutedEventArgs& args);
+        void MapImage_KeyDown(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Core::KeyEventArgs& e);
 
-        winrt::event_token PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const& value);
-        void PropertyChanged(winrt::event_token const& token);
+        winrt::event_token PropertyChanged(const winrt::Windows::UI::Xaml::Data::PropertyChangedEventHandler& value);
+ 
+        void PropertyChanged(const winrt::event_token& token);
 
-        void NotifyPropertyChanged(winrt::hstring const& fieldname);
+        void NotifyPropertyChanged(const winrt::hstring& fieldname);
 
-        winrt::Windows::Foundation::IAsyncAction LoadImages(::winrt::Microsoft::Graphics::Canvas::CanvasDevice const& device);
+        winrt::Windows::Foundation::IAsyncAction LoadImages(const winrt::Microsoft::Graphics::Canvas::CanvasDevice& device);
 
     private:
         bool goButtonEnabled;
+        bool mouseActive;
 
         template<typename T>
         void ChangeFieldValue(T& field, T value, winrt::hstring const& fieldname);
-        winrt::event<Windows::UI::Xaml::Data::PropertyChangedEventHandler> propertyChanged;
+        winrt::event<winrt::Windows::UI::Xaml::Data::PropertyChangedEventHandler> propertyChanged;
 
         Map map;
         AStarSolver solver;
         int marginx, marginy;
         int dx, dy;
         bool running;
+        int startMapX, startMapY;
+        int tilesPerRow, tilesPerHeight;
 
-        void drawMap(::winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession const& painter) const;
+        void DrawMap(const winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession& painter) const;
+        int MapToSpriteId(Map::CellType cell) const;
 
-        void startSearch();
-        void stopSearch();
-        bool loadMap(std::wistream& fd);
+        void StartSearch();
+        void StopSearch();
+        bool LoadMap(std::wistream& fd);
 
         std::unique_ptr<SpriteSheet> tiles;
 
