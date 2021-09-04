@@ -26,7 +26,7 @@
 // Helper function for writing into the debug console from Visual Studio
 static void OutputMessage(const std::string& message)
 {
-	std::wstring buffer(message.begin(), message.end());
+	const std::wstring buffer(message.begin(), message.end());
 	OutputDebugString(buffer.c_str());
 	OutputDebugString(L"\n");
 }
@@ -44,7 +44,7 @@ void LogWarning(const std::string& message)
 
 void LogErrno()
 {
-	const size_t errmsglen = 1024; // 1KB
+	constexpr size_t errmsglen = 1024; // 1KB
 	wchar_t errmsg[errmsglen] = { 0 };
 	_wcserror_s(errmsg, errno);
 
