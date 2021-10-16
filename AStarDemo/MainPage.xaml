@@ -9,22 +9,20 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Unloaded="Page_Unloaded">
 
-    <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton Icon="OpenFile" Label="Open Map" Click="OpenMap_Click" Name="OpenBtn"/>
-            <AppBarButton Icon="Go" Label="Search" IsEnabled="{x:Bind MainViewModel.GoButtonEnabled, Mode=OneWay}" Name="GoBtn"/>
-            <AppBarButton Icon="Stop" Label="Stop Search" Name="StopBtn"/>
-            <AppBarButton Icon="Cancel" Label="Clear Map" Name="ClearBtn"/>
-        </CommandBar>
-    </Page.BottomAppBar>
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <canvas:CanvasAnimatedControl Grid.Column="0" Grid.Row="0" x:Name="MapCanvas" Draw="MapCanvas_Draw" CreateResources="MapCanvas_CreateResources"/>
+        <CommandBar Grid.Column="0" Grid.Row="1">
+            <AppBarButton Icon="OpenFile" Label="Open Map" Click="OpenMap_Click" Name="OpenBtn"/>
+            <AppBarButton Icon="Go" Label="Search" IsEnabled="{x:Bind MainViewModel.GoButtonEnabled, Mode=OneWay}" Name="GoBtn"/>
+            <AppBarButton Icon="Stop" Label="Stop Search" Name="StopBtn"/>
+            <AppBarButton Icon="Cancel" Label="Clear Map" Name="ClearBtn"/>
+        </CommandBar>
     </Grid>
 </Page>
