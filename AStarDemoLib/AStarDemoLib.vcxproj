@@ -27,15 +27,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AStarSolver.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Node.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AStarSolver.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Node.h" />
+    <ClCompile Include="AStarLib.ixx" />
+    <ClCompile Include="AStarSolver.ixx" />
+    <ClCompile Include="Logger.ixx" />
+    <ClCompile Include="Map.ixx" />
+    <ClCompile Include="Node.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4984905f-adb3-4e5e-9f6e-ddcf40beac6c}</ProjectGuid>

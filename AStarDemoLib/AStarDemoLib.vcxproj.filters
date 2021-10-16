@@ -7,14 +7,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AStarSolver.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Node.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AStarSolver.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Node.h" />
+    <ClCompile Include="Node.ixx" />
+    <ClCompile Include="Logger.ixx" />
+    <ClCompile Include="Map.ixx" />
+    <ClCompile Include="AStarSolver.ixx" />
+    <ClCompile Include="AStarLib.ixx" />
   </ItemGroup>
 </Project>
