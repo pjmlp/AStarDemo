@@ -19,6 +19,19 @@ the code, and also did some modern C++ related improvements.
 There are thousands of fancy demo samples with tile engines and A*, this is not one of them,
 the only goal was to play with C++ language features.
 
+# C++ 20 Modules, Visual C++ and C++/WinRT
+
+Although I managed to make it work, there is still plenty of work to do from Microsoft side.
+
+* Using header units triggers endless amount of macro redefinition warnings
+* C++/WinRT and XAML compiler don't understand modules, hence the strange _import_ statements done on header files
+* Also why several places header files are included via global module fragments
+* Intelisense gives up most of the time and ctrl+space does nothing, or shows plenty of reds while it compiles just fine
+* Static analysis doesn't understand modules and fails to process any code
+* You might need to kill Visual Studio when trying to navigate across modules as it occasionally hangs
+
+Still all in all, it is quite remarkable that it is working, and it can only get better.
+
 # Code Structure
 
 The code is written in C++/WinRT, targeting Visual 2019 or later, composed of the following projects:
@@ -32,6 +45,10 @@ AStarDemoLibTests - The unit tests for the A* library written with help of Googl
 # Building
 
 It is only required to open the project solution located at *AStarDemo/AStarDemo.sln* and do a full build.
+
+## Requirements
+* Visual Studio 2019 16.11.15 or later;
+* Windows SDK, including UWP workload
 
 # References
 
