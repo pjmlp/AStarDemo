@@ -29,6 +29,7 @@ Although I managed to make it work, there is still plenty of work to do from Mic
 * Intelisense gives up most of the time and ctrl+space does nothing, or shows plenty of reds while it compiles just fine
 * Static analysis doesn't understand modules and fails to process any code
 * You might need to kill Visual Studio when trying to navigate across modules as it occasionally hangs
+* Mixing modules with pre-compiled headers on the same project doesn't work, so either split into two projects or disable pre-compiled headers
 
 Still all in all, it is quite remarkable that it is working, and it can only get better.
 
