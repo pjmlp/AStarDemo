@@ -23,14 +23,13 @@
 #pragma once
 
 import AStarLib;
+import SpriteSheet;
 
 #include "AStarViewModel.g.h"
 
 #include <future>
 #include <string>
 #include <iosfwd>
-
-#include "SpriteSheet.h"
 
 namespace winrt::AStarDemo::implementation
 {
