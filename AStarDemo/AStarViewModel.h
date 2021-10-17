@@ -22,6 +22,8 @@
 
 #pragma once
 
+import AStarLib;
+
 #include "AStarViewModel.g.h"
 
 #include <future>
@@ -29,8 +31,6 @@
 #include <iosfwd>
 
 #include "SpriteSheet.h"
-#include "Map.h"
-#include "AStarSolver.h"
 
 namespace winrt::AStarDemo::implementation
 {
@@ -68,8 +68,8 @@ namespace winrt::AStarDemo::implementation
         void ChangeFieldValue(T& field, T value, winrt::hstring const& fieldname);
         winrt::event<winrt::Windows::UI::Xaml::Data::PropertyChangedEventHandler> propertyChanged;
 
-        Map map;
-        AStarSolver solver;
+        AStarLib::Map map;
+        AStarLib::AStarSolver solver;
         int marginx, marginy;
         int dx, dy;
         bool running;
@@ -77,7 +77,7 @@ namespace winrt::AStarDemo::implementation
         int tilesPerRow, tilesPerHeight;
 
         void DrawMap(const winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession& painter) const;
-        int MapToSpriteId(Map::CellType cell) const;
+        int MapToSpriteId(AStarLib::Map::CellType cell) const;
 
         void StartSearch();
         void StopSearch();
@@ -86,7 +86,7 @@ namespace winrt::AStarDemo::implementation
         std::unique_ptr<SpriteSheet> tiles;
 
         // Handle for the A* background processing.
-        std::future<AStarSolver::NodePtr> backTask;
+        std::future<AStarLib::AStarSolver::NodePtr> backTask;
     };
 }
 

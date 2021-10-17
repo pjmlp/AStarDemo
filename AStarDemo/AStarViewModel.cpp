@@ -20,7 +20,6 @@
 #include "pch.h"
 #include <sstream>
 
-#include "Map.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -30,11 +29,6 @@
 #include <thread>
 
 
-#include "Map.h"
-#include "Node.h"
-#include "AStarSolver.h"
-
-#include "Logger.h"
 
 #include "AStarViewModel.h"
 #if __has_include("AStarViewModel.g.cpp")
@@ -53,6 +47,7 @@ using namespace winrt::Windows::UI::Xaml;
 using namespace winrt::Windows::UI::Xaml::Data;
 using namespace winrt::Windows::UI::Xaml::Input;
 using namespace winrt::Windows::System;
+using namespace AStarLib;
 
 
 namespace winrt::AStarDemo::implementation
