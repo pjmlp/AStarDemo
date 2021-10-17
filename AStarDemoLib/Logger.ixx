@@ -16,14 +16,64 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+module;
+
+#include <windows.h>
+
 export module Logger;
 
 import <string>;
+import <format>;
 
 /**
- * General purpose logging API.
- * Specific OS implementations are provided in other projects.
+ * @brief Helper function to actually send the C++ string into the Windows debug console
+ * @param message the message to send into the debug console
  */
-export void (*LogInfo)(const std::string& message);
-export void (*LogWarning)(const std::string& message);
-export void(*LogErrno)();
+void OutputMessage(const std::string& message);
+
+export namespace AStarLib::Logger {
+	/**
+	 * @brief logs the provided string with INFO level
+	 * @param message the message to send into the debug console
+	 */
+	void LogInfo(const std::string& message)
+	{
+		OutputMessage(std::format("[INFO] {}", message));
+	}
+
+	/**
+     * @brief logs the provided string with WARNING level
+     * @param message the message to send into the debug console
+     */
+	void LogWarning(const std::string& message)
+	{
+		OutputMessage(std::format("[WARNING] {}", message));
+	}
+
+	/**
+     * @brief logs the last errno value
+     * @param message the message to send into the debug console
+     */
+	void LogErrno()
+	{
+		constexpr size_t errmsglen = 1024; // 1KB
+		wchar_t errmsg[errmsglen] = { 0 };
+		_wcserror_s(errmsg, errno);
+
+		OutputDebugString(L"[ERROR] ");
+		OutputDebugString(errmsg);
+		OutputDebugString(L"\n");
+	}
+}
+
+
+module :private;
+
+
+void OutputMessage(const std::string& message)
+{
+	const std::wstring buffer(message.begin(), message.end());
+	OutputDebugString(buffer.c_str());
+	OutputDebugString(L"\n");
+}
+

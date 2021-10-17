@@ -87,6 +87,8 @@ typedef unordered_set<AStarSolver::NodePtr, function<decltype(hash_func)>, funct
 template<typename T>
 void write_data(ostream& output, const string& name, const T& data)
 {
+    using namespace AStarLib::Logger;
+
     LogInfo(std::format("Start {}", name));
     for (shared_ptr<Node> next_node : data) {
         if (next_node != nullptr) {
