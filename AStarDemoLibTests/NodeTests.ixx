@@ -7,6 +7,8 @@ export module NodeTests;
 
 import AStarLib;
 
+using namespace AStarLib;
+
 using namespace testing;
 
 TEST(NodeTests, TestConstructor)

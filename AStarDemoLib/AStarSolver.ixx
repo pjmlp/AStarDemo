@@ -32,31 +32,37 @@ import Node;
 import Map;
 import Logger;
 
-/**
- * Searchs for a possible path between two given points by using the A* algorithm.
- */
-export class AStarSolver
-{
-public:
-    using NodePtr = std::shared_ptr<Node>;
-    AStarSolver(Map& map) noexcept;
+export namespace AStarLib {
 
-    NodePtr find(NodePtr start, NodePtr goal);
+    /**
+     * Searchs for a possible path between two given points by using the A* algorithm.
+     */
+    export class AStarSolver
+    {
+    public:
+        using NodePtr = std::shared_ptr<Node>;
+        AStarSolver(Map& map) noexcept;
 
-private:
-    Map& m_map;
+        NodePtr find(NodePtr start, NodePtr goal);
+
+    private:
+        Map& m_map;
 
 
-    double movement_cost(const Node& from, const Node& to) const noexcept;
-    double estimate(const Node& current, const Node& goal) const noexcept;
-    void sucessors(NodePtr current, const Node& goal, std::vector<NodePtr>& neighbours);
-};
+        double movement_cost(const Node& from, const Node& to) const noexcept;
+        double estimate(const Node& current, const Node& goal) const noexcept;
+        void sucessors(NodePtr current, const Node& goal, std::vector<NodePtr>& neighbours);
+    };
+}
 
 // Uncomment if debugging information for the solver is desired
 //#define DEBUG_ASTAR_SOLVER
 
 // make the standard C++ library available on the local namespace
 using namespace std;
+
+// also to reduce typing
+using namespace AStarLib;
 
 // Helper functions for the ClosedType
 size_t hash_func(const AStarSolver::NodePtr& n)
@@ -87,8 +93,6 @@ typedef unordered_set<AStarSolver::NodePtr, function<decltype(hash_func)>, funct
 template<typename T>
 void write_data(ostream& output, const string& name, const T& data)
 {
-    using namespace AStarLib::Logger;
-
     LogInfo(std::format("Start {}", name));
     for (shared_ptr<Node> next_node : data) {
         if (next_node != nullptr) {

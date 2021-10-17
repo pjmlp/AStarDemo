@@ -7,6 +7,8 @@ export module MapTests;
 
 import AStarLib;
 
+using namespace AStarLib;
+
 using namespace testing;
 
 TEST(MapTests, TestConstructor)

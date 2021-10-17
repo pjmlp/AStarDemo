@@ -21,42 +21,48 @@ export module Node;
 import <memory>;
 import <iostream>;
 
-/**
- * This class represents nodes in the path
- */
-export class Node final
-{
-public:
-	explicit Node(int row, int col) noexcept;
+export namespace AStarLib {
 
-	void set_parent(std::shared_ptr<Node> parent) noexcept { m_parent = parent; }
-	std::shared_ptr<Node> get_parent() noexcept { return m_parent; }
+	/**
+	 * This class represents nodes in the path
+	 */
+	export class Node final
+	{
+	public:
+		explicit Node(int row, int col) noexcept;
 
-	// accessor functions
-	int row() const noexcept { return m_row; }
-	int col() const noexcept { return m_col; }
-	double cost() const noexcept { return m_cost; }
-	double estimation() const noexcept { return m_estimation; }
-	double total_cost() const noexcept { return m_cost + m_estimation; }
+		void set_parent(std::shared_ptr<Node> parent) noexcept { m_parent = parent; }
+		std::shared_ptr<Node> get_parent() noexcept { return m_parent; }
 
-	// setters
-	void set_cost(double cost) noexcept { m_cost = cost; }
-	void set_estimation(double estimation) noexcept { m_estimation = estimation; }
+		// accessor functions
+		int row() const noexcept { return m_row; }
+		int col() const noexcept { return m_col; }
+		double cost() const noexcept { return m_cost; }
+		double estimation() const noexcept { return m_estimation; }
+		double total_cost() const noexcept { return m_cost + m_estimation; }
 
-	bool operator== (const Node& other) const noexcept;
-	bool operator!= (const Node& other) const noexcept;
+		// setters
+		void set_cost(double cost) noexcept { m_cost = cost; }
+		void set_estimation(double estimation) noexcept { m_estimation = estimation; }
 
-	void write_contents(std::ostream& output) const;
+		bool operator== (const Node& other) const noexcept;
+		bool operator!= (const Node& other) const noexcept;
 
-private:
-	int m_row, m_col;
-	double m_cost;
-	double m_estimation;
-	std::shared_ptr<Node> m_parent;
+		void write_contents(std::ostream& output) const;
+
+	private:
+		int m_row, m_col;
+		double m_cost;
+		double m_estimation;
+		std::shared_ptr<Node> m_parent;
+	};
 };
 
 // make the standard C++ library available on the local namespace
 using namespace std;
+
+// also to reduce typing
+using namespace AStarLib;
 
 
 Node::Node(int row, int col) noexcept : m_row(row), m_col(col), m_cost(0.0), m_estimation(0.0), m_parent(nullptr)

@@ -31,7 +31,7 @@ import <format>;
  */
 void OutputMessage(const std::string& message);
 
-export namespace AStarLib::Logger {
+export namespace AStarLib {
 	/**
 	 * @brief logs the provided string with INFO level
 	 * @param message the message to send into the debug console

@@ -30,81 +30,86 @@ import <fstream>;
 
 import Node;
 
-/**
- * Class to represent the maps used for the A* algorithm.
- */
-export class Map final
-{
-public:
-    enum class CellType { FREE, BLOCKED, VISITED, NODE_PATH, START, END };
+export namespace AStarLib {
 
-    explicit Map() noexcept;
-    explicit Map(int rows, int cols);
+    /**
+     * Class to represent the maps used for the A* algorithm.
+     */
+    export class Map final
+    {
+    public:
+        enum class CellType { FREE, BLOCKED, VISITED, NODE_PATH, START, END };
+
+        explicit Map() noexcept;
+        explicit Map(int rows, int cols);
 
 
-    bool load(std::wistream& fd);
+        bool load(std::wistream& fd);
 
-    void clear() noexcept;
+        void clear() noexcept;
 
-    int columns() const noexcept { return mapCols; }
+        int columns() const noexcept { return mapCols; }
 
-    int rows() const noexcept { return mapRows; }
+        int rows() const noexcept { return mapRows; }
 
-    int tilesWidth() const noexcept { return tileWidth; }
+        int tilesWidth() const noexcept { return tileWidth; }
 
-    int tilesHeigth() const noexcept { return tileHeigth; }
+        int tilesHeigth() const noexcept { return tileHeigth; }
 
-    std::wstring tilesetFilename() const noexcept { return tileset; }
+        std::wstring tilesetFilename() const noexcept { return tileset; }
 
-    // Declared as inline member function so that we get the abstraction
-    // without speed penalty. 
-    [[gsl::suppress(bounds.4)]]
-    CellType at(int row, int col) const {
-        // already bound checked, hence disabling the check above
-        assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
-        std::lock_guard<std::mutex> lock(m_map_mutex);
-        return m_map[row][col];
-    }
-
-    [[gsl::suppress(bounds.4)]]
-    void set_pos(int row, int col, CellType cell) {
-        // already bound checked, hence disabling the check above
-        assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
-        std::lock_guard<std::mutex> lock(m_map_mutex);
-        m_map[row][col] = cell;
-        if (cell == CellType::START) {
-            start = std::make_pair(row, col);
+        // Declared as inline member function so that we get the abstraction
+        // without speed penalty. 
+        [[gsl::suppress(bounds.4)]]
+        CellType at(int row, int col) const {
+            // already bound checked, hence disabling the check above
+            assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
+            std::lock_guard<std::mutex> lock(m_map_mutex);
+            return m_map[row][col];
         }
-        else if (cell == CellType::END) {
-            end = std::make_pair(row, col);
+
+        [[gsl::suppress(bounds.4)]]
+        void set_pos(int row, int col, CellType cell) {
+            // already bound checked, hence disabling the check above
+            assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
+            std::lock_guard<std::mutex> lock(m_map_mutex);
+            m_map[row][col] = cell;
+            if (cell == CellType::START) {
+                start = std::make_pair(row, col);
+            }
+            else if (cell == CellType::END) {
+                end = std::make_pair(row, col);
+            }
         }
-    }
 
-    [[gsl::suppress(bounds.4)]]
-    void visit(int row, int col) {
-        assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
-        std::lock_guard<std::mutex> lock(m_map_mutex);
-        m_map[row][col] = CellType::VISITED;
-    }
+        [[gsl::suppress(bounds.4)]]
+        void visit(int row, int col) {
+            assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
+            std::lock_guard<std::mutex> lock(m_map_mutex);
+            m_map[row][col] = CellType::VISITED;
+        }
 
-    void dump_map();
-    void add_path(Node* path);
+        void dump_map();
+        void add_path(AStarLib::Node* path);
 
-    const std::pair<int, int>& get_start() const noexcept { return start; }
-    const std::pair<int, int>& get_end() const noexcept { return end; }
+        const std::pair<int, int>& get_start() const noexcept { return start; }
+        const std::pair<int, int>& get_end() const noexcept { return end; }
 
-private:
-    std::vector<std::vector<CellType>> m_map;
-    mutable std::mutex m_map_mutex;
-    std::pair<int, int> start, end;
-    int mapRows, mapCols;
-    int tileWidth, tileHeigth;
-    std::wstring tileset;
+    private:
+        std::vector<std::vector<CellType>> m_map;
+        mutable std::mutex m_map_mutex;
+        std::pair<int, int> start, end;
+        int mapRows, mapCols;
+        int tileWidth, tileHeigth;
+        std::wstring tileset;
+    };
 };
 
 // make the standard C++ library available on the local namespace
 using namespace std;
 
+// also to reduce typing
+using namespace AStarLib;
 
 /**
 * Constructs the map by setting its contents to empty.
