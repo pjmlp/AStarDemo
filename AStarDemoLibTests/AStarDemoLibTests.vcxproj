@@ -45,7 +45,7 @@
     <IncludePath>$(SolutionDir)..\AStarDemoLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.ixx" />
     <ClCompile Include="MapTests.ixx" />
     <ClCompile Include="NodeTests.ixx" />
   </ItemGroup>

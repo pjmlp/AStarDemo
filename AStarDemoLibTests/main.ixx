@@ -1,4 +1,4 @@
-/* main.cpp - driver application for Google tests
+/* main.ixx - driver application for Google tests
  * Copyright (C) 2021 Paulo Pinto
  *
  * This library is free software; you can redistribute it and/or
@@ -16,12 +16,17 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-import NodeTests;
-import MapTests;
+module;
 
 #include <gtest/gtest.h>
 
-int main(int argc, char* argv[])
+export module main;
+
+import NodeTests;
+import MapTests;
+
+
+export int main(int argc, char* argv[])
 {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
