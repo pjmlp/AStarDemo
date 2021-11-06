@@ -26,6 +26,8 @@ namespace AStarDemo
         AStarViewModel();
 
         Boolean GoButtonEnabled;
+        Boolean LoadedMap;
+
         void LoadFile(Windows.Storage.StorageFile file);
         void Draw(Microsoft.Graphics.Canvas.CanvasDrawingSession session, Windows.Foundation.Size size);
         Windows.Foundation.IAsyncAction LoadImages(Microsoft.Graphics.Canvas.CanvasDevice device);

@@ -66,7 +66,7 @@ namespace winrt::AStarDemo::implementation
         NotifyPropertyChanged(fieldname);
     }
 
-    AStarViewModel::AStarViewModel(): goButtonEnabled(false), mouseActive(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr), startMapX(0), startMapY(0)
+    AStarViewModel::AStarViewModel(): goButtonEnabled(false), loadedMap(false), mouseActive(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr), startMapX(0), startMapY(0)
     {
     }
 
@@ -78,6 +78,16 @@ namespace winrt::AStarDemo::implementation
     void AStarViewModel::GoButtonEnabled(bool value)
     {
         goButtonEnabled = value;
+    }
+
+    bool AStarViewModel::LoadedMap()
+    {
+        return loadedMap;
+    }
+
+    void AStarViewModel::LoadedMap(bool value)
+    {
+        loadedMap = value;
     }
 
     /**
@@ -92,6 +102,7 @@ namespace winrt::AStarDemo::implementation
         if (LoadMap(buffer))
         {
             ChangeFieldValue(goButtonEnabled, true, L"GoButtonEnabled");
+            ChangeFieldValue(loadedMap, true, L"LoadedMap");
         }
     }
 
@@ -320,9 +331,12 @@ namespace winrt::AStarDemo::implementation
      */
     IAsyncAction AStarViewModel::LoadImages(const CanvasDevice& device)
     {
-        auto ptr = co_await SpriteSheet::LoadAsync(device, L"Assets/Tiles.png", float2(32, 32), float2::zero());
-        if (ptr != nullptr) {
-            tiles = std::unique_ptr<SpriteSheet>(ptr);
+        std::wstring filename = map.tilesetFilename();
+        if (filename.size() > 0) {
+            auto ptr = co_await SpriteSheet::LoadAsync(device, filename.c_str(), float2(32, 32), float2::zero());
+            if (ptr != nullptr) {
+                tiles = std::unique_ptr<SpriteSheet>(ptr);
+            }
         }
 
 

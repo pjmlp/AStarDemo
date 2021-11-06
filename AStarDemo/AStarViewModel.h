@@ -40,6 +40,9 @@ namespace winrt::AStarDemo::implementation
         bool GoButtonEnabled();
         void GoButtonEnabled(bool value);
 
+        bool LoadedMap();
+        void LoadedMap(bool value);
+
         winrt::Windows::Foundation::IAsyncAction LoadFile(const winrt::Windows::Storage::StorageFile& file);
         void Draw(const winrt::Microsoft::Graphics::Canvas::CanvasDrawingSession& renderTarget, const winrt::Windows::Foundation::Size& size);
         void  ClearMap_Click(const winrt::Windows::Foundation::IInspectable& sender, const winrt::Windows::UI::Xaml::RoutedEventArgs& args);
@@ -61,6 +64,7 @@ namespace winrt::AStarDemo::implementation
 
     private:
         bool goButtonEnabled;
+        bool loadedMap;
         bool mouseActive;
 
         template<typename T>

@@ -81,28 +81,41 @@ namespace winrt::AStarDemo::implementation
         }
     }
 
+    // helper variables to keep track of the loading process.
+    static bool loadedLevel = false;
+    static bool isLoading = false;
+
     void MainPage::MapCanvas_Draw(const ICanvasAnimatedControl& sender, const CanvasAnimatedDrawEventArgs& args)
     {
-        if (modelView != nullptr) {
-            modelView.Draw(args.DrawingSession(), sender.Size());
+        if (modelView != nullptr && modelView.LoadedMap()) {
+            if (loadedLevel) {
+                modelView.Draw(args.DrawingSession(), sender.Size());
+            }
+            else if (!isLoading) {
+                isLoading = true;
+                LoadImages(MapCanvas().Device());
+            }
         }
 
     }
 
     void MainPage::MapCanvas_CreateResources(const ICanvasAnimatedControl& sender, const CanvasCreateResourcesEventArgs& args)
     {
-        bool spriteBatchSupported = CanvasSpriteBatch::IsSupported(sender.Device());
-        if (!spriteBatchSupported) {
-            return;
-        }
-
-        args.TrackAsyncAction(LoadImages(sender.Device()));
+        // Nothing to do here, resources are created when the level is loaded.
     }
 
     IAsyncAction MainPage::LoadImages(const CanvasDevice& device)
     {
+        bool spriteBatchSupported = CanvasSpriteBatch::IsSupported(device);
+        if (!spriteBatchSupported) {
+             co_return;
+        }
+
         if (modelView != nullptr) {
             co_await modelView.LoadImages(device);
+
+            loadedLevel = true;
+            isLoading = false;
         }
 
         co_return;
