@@ -63,17 +63,15 @@ export namespace AStarLib {
         [[gsl::suppress(bounds.4)]]
         CellType at(int row, int col) const {
             // already bound checked, hence disabling the check above
-            assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
             std::lock_guard<std::mutex> lock(m_map_mutex);
-            return m_map[row][col];
+            return m_map.at(row).at(col);
         }
 
         [[gsl::suppress(bounds.4)]]
         void set_pos(int row, int col, CellType cell) {
             // already bound checked, hence disabling the check above
-            assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
             std::lock_guard<std::mutex> lock(m_map_mutex);
-            m_map[row][col] = cell;
+            m_map.at(row).at(col) = cell;
             if (cell == CellType::START) {
                 start = std::make_pair(row, col);
             }
@@ -84,9 +82,9 @@ export namespace AStarLib {
 
         [[gsl::suppress(bounds.4)]]
         void visit(int row, int col) {
-            assert((col >= 0 && col < mapCols) && (row >= 0 && row < mapRows));
+            // already bound checked, hence disabling the check above
             std::lock_guard<std::mutex> lock(m_map_mutex);
-            m_map[row][col] = CellType::VISITED;
+            m_map.at(row).at(col) = CellType::VISITED;
         }
 
         void dump_map();
