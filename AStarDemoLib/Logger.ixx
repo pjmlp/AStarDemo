@@ -59,7 +59,8 @@ export namespace AStarLib {
 		constexpr size_t errmsglen = 1024; // 1KB
 		wchar_t errmsg[errmsglen] = { 0 };
 		_wcserror_s(errmsg, errno);
-
+		
+		// just use the Windows API directly in this case
 		OutputDebugString(L"[ERROR] ");
 		OutputDebugString(errmsg);
 		OutputDebugString(L"\n");
@@ -69,7 +70,10 @@ export namespace AStarLib {
 
 module :private;
 
-
+/**
+ * @brief Helper function to convert strings into the Windows string format.
+ * @param message the message to send into the debug console
+ */
 void OutputMessage(const std::string& message)
 {
 	const std::wstring buffer(message.begin(), message.end());
