@@ -69,8 +69,9 @@ Node::Node(int row, int col) noexcept : m_row(row), m_col(col), m_cost(0.0), m_e
 {
 
 }
+
 /**
- * Assume that two nodes for the same cell are the same node.
+ * @brief Assume that two nodes for the same cell are the same node.
  * @param other node to compare
  */
 bool Node::operator== (const Node& other) const noexcept
@@ -84,7 +85,7 @@ bool Node::operator== (const Node& other) const noexcept
 }
 
 /**
- * Assume that two nodes for the same cell are the same node.
+ * @brief Assume that two nodes for the same cell are the same node.
  * @param other node to compare
  */
 bool Node::operator!= (const Node& other) const noexcept
@@ -93,7 +94,7 @@ bool Node::operator!= (const Node& other) const noexcept
 }
 
 /**
- * Writes the node contents to the standard output
+ * @brief Writes the node contents to the standard output
  * @param output a stream used to capture the node contents
  */
 void Node::write_contents(std::ostream& output) const
