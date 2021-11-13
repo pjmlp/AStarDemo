@@ -112,13 +112,18 @@ using namespace std;
 using namespace AStarLib;
 
 /**
-* Constructs the map by setting its contents to empty.
-*/
+ * @brief Constructs the map by setting its contents to empty.
+ */
 Map::Map() noexcept : start{ -1, -1 }, end{ -1, -1 }, mapRows{ 0 }, mapCols{ 0 }
 {
     clear();
 }
 
+/**
+ * @brief Constructs the map, with the given size.
+ * @param rows the amount of map rows.
+ * @param cols the amount of map columns.
+ */
 Map::Map(int rows, int cols) : start{ -1, -1 }, end{ -1, -1 }, mapRows{ rows }, mapCols{ cols }
 {
     m_map.resize(mapRows);
@@ -128,7 +133,7 @@ Map::Map(int rows, int cols) : start{ -1, -1 }, end{ -1, -1 }, mapRows{ rows }, 
 }
 
 /**
-* Constructs the map by loading it from the specified filename
+* @brief Constructs the map by loading it from the specified filename
 * @param filename The filename where to load the data from.
 * @return false if there was an error loading the file
 */
@@ -176,8 +181,8 @@ bool Map::load(std::wistream& fd)
 }
 
 /**
-* Clears the map contents
-*/
+ * @brief Clears the map contents
+ */
 [[gsl::suppress(bounds.4)]] // The for loop already takes care, no need for double check.
 void Map::clear() noexcept
 {
@@ -192,7 +197,7 @@ void Map::clear() noexcept
 }
 
 /**
- * To be used as a debugging function. It shows the loaded map
+ * @brief To be used as a debugging function. It shows the loaded map
  */
 void Map::dump_map()
 {
@@ -231,7 +236,7 @@ void Map::dump_map()
 
 
 /**
- * Updates the map information adding the path, from the end to the
+ * @brief Updates the map information adding the path, from the end to the
  * begining. This is most likely not the best way to do it, but it
  * provides a quick way given the exercise allowed duration.
  *
