@@ -66,7 +66,7 @@ namespace winrt::AStarDemo::implementation
         NotifyPropertyChanged(fieldname);
     }
 
-    AStarViewModel::AStarViewModel(): goButtonEnabled(false), loadedMap(false), mouseActive(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr), startMapX(0), startMapY(0)
+    AStarViewModel::AStarViewModel(): goButtonEnabled(false), loadedMap(false), mouseActive(false), map(), solver(map), running(false), dx(0), dy(0), marginx(0), marginy(0), tiles(nullptr), startMapX(0), startMapY(0), tilesPerHeight(0), tilesPerRow(0)
     {
     }
 

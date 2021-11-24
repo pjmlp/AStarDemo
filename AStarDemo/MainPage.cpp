@@ -99,7 +99,7 @@ namespace winrt::AStarDemo::implementation
 
     }
 
-    void MainPage::MapCanvas_CreateResources(const ICanvasAnimatedControl& sender, const CanvasCreateResourcesEventArgs& args)
+    void MainPage::MapCanvas_CreateResources(const ICanvasAnimatedControl&, const CanvasCreateResourcesEventArgs&)
     {
         // Nothing to do here, resources are created when the level is loaded.
     }
