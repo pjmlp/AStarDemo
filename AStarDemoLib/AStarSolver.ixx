@@ -208,14 +208,11 @@ void AStarSolver::sucessors(NodePtr current, const Node& goal, vector<NodePtr>& 
             if (!(row == current->row() && col == current->col()) &&
                 (m_map.at(row, col) != Map::CellType::BLOCKED)) {
 
-                // Not clear how to make VC++ happy. Apparently make_shared() is to be avoided, although
-                // push_back expects a shared_ptr.
-                [[gsl::suppress(lifetime.5)]]
                 auto neighbour = make_shared<Node>(row, col);
 
                 neighbour->set_parent(current);
                 neighbour->set_estimation(estimate(*current, goal));
-                neighbours.push_back(neighbour);
+                neighbours.push_back(std::move(neighbour));
             }
         }
     }
