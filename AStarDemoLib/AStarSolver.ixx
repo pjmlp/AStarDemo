@@ -111,7 +111,7 @@ AStarSolver::AStarSolver(Map& map) noexcept : m_map(map)
 /**
  * A* search function
  * The caller is responsible for cleaning the memory allocated for the
- * path. The arguments are assumed to be allocated on the heap. [[gsl::suppress(lifetime.3)]]
+ * path. The arguments are assumed to be allocated on the heap.
  *
  * @param start where to start searching from
  * @param goal   the target destination
