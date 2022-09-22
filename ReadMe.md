@@ -1,3 +1,8 @@
+# Update
+
+Since the respective C++/WinRT [ticket](https://github.com/microsoft/cppwinrt/issues/1123) for C++20 support has been closed, there is no use waiting
+for C++20 modules support, thus this effort is now archived.
+
 # Introduction
 
 This is a port from an old application that was original written in a mix of C++14, Java and C++/CX.
